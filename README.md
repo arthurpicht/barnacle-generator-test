@@ -1,1 +1,2 @@
-# barnacle-test-gen
+# barnacle-generator-test
+

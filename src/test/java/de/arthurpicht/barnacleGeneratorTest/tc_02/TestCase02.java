@@ -1,4 +1,4 @@
-package de.arthurpicht.barnacleGeneratorTest.tc_01;
+package de.arthurpicht.barnacleGeneratorTest.tc_02;
 
 import de.arthurpicht.barnacle.GeneratorInit;
 import de.arthurpicht.barnacleGeneratorTest.TestConfiguration;
@@ -14,9 +14,9 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestCase01 {
+public class TestCase02 {
 
-    private static final String testCase = "tc_01";
+    private static final String testCase = "tc_02";
 
     @BeforeAll
     public static void prepare() throws IOException {

@@ -1,6 +1,7 @@
 package de.arthurpicht.barnacleGeneratorTest.tc_03;
 
-import de.arthurpicht.barnacle.GeneratorInit;
+import de.arthurpicht.barnacle.BarnacleGeneratorStarter;
+import de.arthurpicht.barnacle.context.GeneratorContext;
 import de.arthurpicht.barnacleGeneratorTest.TestConfiguration;
 import de.arthurpicht.barnacleGeneratorTest.utils.CleanUp;
 import de.arthurpicht.barnacleGeneratorTest.utils.Prepare;
@@ -20,6 +21,7 @@ public class TestCase03 {
 
     @BeforeAll
     public static void prepare() throws IOException {
+        GeneratorContext.invalidate();
         CleanUp.cleanUp(testCase);
         Prepare.prepare(testCase);
     }
@@ -36,7 +38,7 @@ public class TestCase03 {
         System.setProperty(
                 "barnacle.conf",
                 TestPaths.getBarnacleConf(testCase));
-        GeneratorInit.main(null);
+        BarnacleGeneratorStarter.main(null);
 
         String sql = Files.readString(
                 Paths.get(TestPaths.getSql(testCase)));

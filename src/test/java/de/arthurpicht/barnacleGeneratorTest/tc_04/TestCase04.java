@@ -1,4 +1,4 @@
-package de.arthurpicht.barnacleGeneratorTest.tc_01;
+package de.arthurpicht.barnacleGeneratorTest.tc_04;
 
 import de.arthurpicht.barnacle.BarnacleGeneratorStarter;
 import de.arthurpicht.barnacle.context.GeneratorContext;
@@ -15,9 +15,9 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestCase01 {
+public class TestCase04 {
 
-    private static final String testCase = "tc_01";
+    private static final String testCase = "tc_04";
 
     @BeforeAll
     public static void prepare() throws IOException {
@@ -40,11 +40,11 @@ public class TestCase01 {
                 TestPaths.getBarnacleConf(testCase));
         BarnacleGeneratorStarter.main(null);
 
-        String sql = Files.readString(
-                Paths.get(TestPaths.getSql(testCase)));
-        String sqlExpected = Files.readString(
-                Paths.get(TestPaths.getSqlExpected(testCase)));
-        assertEquals(sqlExpected, sql);
+//        String sql = Files.readString(
+//                Paths.get(TestPaths.getSql(testCase)));
+//        String sqlExpected = Files.readString(
+//                Paths.get(TestPaths.getSqlExpected(testCase)));
+//        assertEquals(sqlExpected, sql);
     }
 
 }

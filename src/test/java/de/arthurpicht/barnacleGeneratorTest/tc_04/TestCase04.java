@@ -40,11 +40,11 @@ public class TestCase04 {
                 TestPaths.getBarnacleConf(testCase));
         BarnacleGeneratorStarter.main(null);
 
-//        String sql = Files.readString(
-//                Paths.get(TestPaths.getSql(testCase)));
-//        String sqlExpected = Files.readString(
-//                Paths.get(TestPaths.getSqlExpected(testCase)));
-//        assertEquals(sqlExpected, sql);
+        String sql = Files.readString(
+                Paths.get(TestPaths.getSql(testCase)));
+        String sqlExpected = Files.readString(
+                Paths.get(TestPaths.getSqlExpected(testCase)));
+        assertEquals(sqlExpected, sql);
     }
 
 }

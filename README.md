@@ -10,4 +10,4 @@ See repo [barnacle-runtime-test] for integration tests for Barnacle execution fu
 * **TC_02**: composite primary key, custom table name
 * **TC_03**: mapping of basic an object types
 * **TC_04**: auto increment fields
-* 
+* **TC_05**: 1:1-relationship

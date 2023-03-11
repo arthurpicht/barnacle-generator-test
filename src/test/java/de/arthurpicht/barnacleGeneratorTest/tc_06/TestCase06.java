@@ -1,12 +1,9 @@
-package de.arthurpicht.barnacleGeneratorTest.tc_02;
+package de.arthurpicht.barnacleGeneratorTest.tc_06;
 
 import de.arthurpicht.barnacle.BarnacleGeneratorStarter;
-import de.arthurpicht.barnacle.configuration.generator.GeneratorConfiguration;
 import de.arthurpicht.barnacle.context.GeneratorContext;
-import de.arthurpicht.barnacle.generator.BarnacleGenerator;
 import de.arthurpicht.barnacleGeneratorTest.TestConfiguration;
 import de.arthurpicht.barnacleGeneratorTest.utils.CleanUp;
-import de.arthurpicht.barnacleGeneratorTest.utils.GeneratorConfigCreator;
 import de.arthurpicht.barnacleGeneratorTest.utils.Prepare;
 import de.arthurpicht.barnacleGeneratorTest.utils.TestPaths;
 import org.junit.jupiter.api.*;
@@ -18,9 +15,9 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestCase02 {
+public class TestCase06 {
 
-    private static final String testCase = "tc_02";
+    private static final String testCase = "tc_06";
 
     @BeforeAll
     public static void prepare() throws IOException {
@@ -38,8 +35,10 @@ public class TestCase02 {
     @Test
     @Order(1)
     public void generateSchema() throws IOException {
-        GeneratorConfiguration generatorConfiguration = GeneratorConfigCreator.create(testCase);
-        BarnacleGenerator.process(generatorConfiguration);
+        System.setProperty(
+                "barnacle.conf",
+                TestPaths.getBarnacleConf(testCase));
+        BarnacleGeneratorStarter.main(null);
 
         String sql = Files.readString(
                 Paths.get(TestPaths.getSql(testCase)));

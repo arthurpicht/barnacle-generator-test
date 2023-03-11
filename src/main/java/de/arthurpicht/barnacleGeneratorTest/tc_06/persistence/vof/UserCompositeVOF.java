@@ -1,4 +1,4 @@
-package de.arthurpicht.barnacleGeneratorTest.tc_05.persistence.vof;
+package de.arthurpicht.barnacleGeneratorTest.tc_06.persistence.vof;
 
 import de.arthurpicht.barnacle.annotations.Annotations;
 import de.arthurpicht.barnacle.annotations.Annotations.Barnacle;

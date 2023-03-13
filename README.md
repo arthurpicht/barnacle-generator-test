@@ -12,4 +12,5 @@ See repo [barnacle-runtime-test] for integration tests for Barnacle execution fu
 * **TC_04**: auto increment fields
 * **TC_05**: 1:1-relationship, PK-to-PK, single PK key field
 * **TC_06**: 1:1-relationship, PK-to-PK, composite PK keys
+* **TC_07**: 1:1-relationship, UK-toPK, single PK key field
 * 

@@ -1,0 +1,17 @@
+SET REFERENTIAL_INTEGRITY FALSE;
+DROP TABLE IF EXISTS garment;
+DROP TABLE IF EXISTS person;
+SET REFERENTIAL_INTEGRITY TRUE;
+CREATE TABLE garment (tempBarnacleGenerator varchar(1));
+ALTER TABLE garment ADD COLUMN (id VARCHAR(255) NOT NULL);
+ALTER TABLE garment ADD COLUMN (name VARCHAR(255));
+ALTER TABLE garment DROP COLUMN tempBarnacleGenerator;
+ALTER TABLE garment ADD PRIMARY KEY (id);
+CREATE TABLE person (tempBarnacleGenerator varchar(1));
+ALTER TABLE person ADD COLUMN (id VARCHAR(255) NOT NULL);
+ALTER TABLE person ADD COLUMN (userName VARCHAR(255));
+ALTER TABLE person ADD COLUMN (favoriteGarmentId VARCHAR(255));
+ALTER TABLE person DROP COLUMN tempBarnacleGenerator;
+ALTER TABLE person ADD PRIMARY KEY (id);
+ALTER TABLE person ADD CONSTRAINT uk_favoriteGarmentId UNIQUE (favoriteGarmentId);
+ALTER TABLE person ADD CONSTRAINT fk_person_1 FOREIGN KEY (favoriteGarmentId) REFERENCES garment (id);

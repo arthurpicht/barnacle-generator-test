@@ -1,6 +1,5 @@
-package de.arthurpicht.barnacleGeneratorTest.tc_06;
+package de.arthurpicht.barnacleGeneratorTest.tc_07;
 
-import de.arthurpicht.barnacle.BarnacleGeneratorStarter;
 import de.arthurpicht.barnacle.configuration.generator.GeneratorConfiguration;
 import de.arthurpicht.barnacle.context.GeneratorContext;
 import de.arthurpicht.barnacle.generator.BarnacleGenerator;
@@ -18,9 +17,9 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TestCase06 {
+public class TestCase07 {
 
-    private static final String testCase = "tc_06";
+    private static final String testCase = "tc_07";
 
     @BeforeAll
     public static void prepare() throws IOException {

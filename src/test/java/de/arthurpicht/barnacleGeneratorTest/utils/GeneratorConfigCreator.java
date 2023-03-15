@@ -6,12 +6,15 @@ import de.arthurpicht.barnacle.configuration.generator.GeneratorConfigurationBui
 
 public class GeneratorConfigCreator {
 
-    public static GeneratorConfiguration create(String testCase) {
+    public static GeneratorConfiguration create(Object testCase) {
+        String testGroupId = TestUtils.getTestGroupId(testCase);
+        String testCaseId = TestUtils.getTestCaseId(testCase);
+
         GeneratorConfigurationBuilder generatorConfigurationBuilder = new GeneratorConfigurationBuilder(
-                "de.arthurpicht.barnacleGeneratorTest." + testCase + ".persistence.vof",
-                "de.arthurpicht.barnacleGeneratorTest." + testCase + ".persistence.vo",
-                "de.arthurpicht.barnacleGeneratorTest." + testCase + ".persistence.vob",
-                "de.arthurpicht.barnacleGeneratorTest." + testCase + ".persistence.dao"
+                "de.arthurpicht.barnacleGeneratorTest." + testGroupId + "." + testCaseId + ".persistence.vof",
+                "de.arthurpicht.barnacleGeneratorTest." + testGroupId + "." + testCaseId + ".persistence.vo",
+                "de.arthurpicht.barnacleGeneratorTest." + testGroupId + "." + testCaseId + ".persistence.vob",
+                "de.arthurpicht.barnacleGeneratorTest." + testGroupId + "." + testCaseId + ".persistence.dao"
         );
         generatorConfigurationBuilder.withDialect(Const.Dialect.H2);
         generatorConfigurationBuilder.withSrcDir("src/main/java");
@@ -19,7 +22,7 @@ public class GeneratorConfigCreator {
         generatorConfigurationBuilder.withExecuteOnDb(false);
         generatorConfigurationBuilder.withCreateScript(true);
         generatorConfigurationBuilder.withScriptFile(
-                "src/main/java-gen/de/arthurpicht/barnacleGeneratorTest/" + testCase + "/sql/test.sql"
+                "src/main/java-gen/de/arthurpicht/barnacleGeneratorTest/" + testGroupId + "/" + testCaseId + "/sql/test.sql"
         );
         generatorConfigurationBuilder.withConnectionManagerCanonicalClassName(
                 "de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager"

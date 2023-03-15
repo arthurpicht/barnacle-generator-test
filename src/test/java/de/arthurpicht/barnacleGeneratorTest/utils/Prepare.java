@@ -6,8 +6,10 @@ import java.nio.file.Path;
 
 public class Prepare {
 
-    public static void prepare(String testCase) throws IOException {
-        Path testCasePath = TestPaths.getJavaGenTestCaseDir(testCase);
+    public static void prepare(Object testCase) throws IOException {
+        String testGroupId = TestUtils.getTestGroupId(testCase);
+        String testCaseId = TestUtils.getTestCaseId(testCase);
+        Path testCasePath = TestPaths.getJavaGenTestCaseDir(testGroupId, testCaseId);
 
         Files.createDirectories(testCasePath.resolve("persistence/dao"));
         Files.createDirectories(testCasePath.resolve("persistence/vo"));

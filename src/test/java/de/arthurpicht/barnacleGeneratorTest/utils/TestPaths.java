@@ -4,15 +4,8 @@ import de.arthurpicht.utils.io.nio2.FileUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLOutput;
 
 public class TestPaths {
-
-//    public static String getBarnacleConf(String testCase) {
-//        Path path = getTestCaseDir(testCase).resolve("config/barnacle.conf");
-//        assertFileExists(path);
-//        return path.toAbsolutePath().toString();
-//    }
 
     public static Path getSql(Object testCase) {
         String canonicalName = testCase.getClass().getCanonicalName();
@@ -24,16 +17,10 @@ public class TestPaths {
     }
 
     public static Path getSqlExpected(Object testCase) {
-        Path testCaseDir = TestUtils.getTestCaseDir(testCase);
+        Path testCaseDir = getTestCaseDir(testCase);
         Path path = testCaseDir.resolve("expected/sql/test.expected.sql");
         assertFileExists(path);
         return path;
-    }
-
-    public static Path getTestCaseDir(Object testCase) {
-        String canonicalName = testCase.getClass().getCanonicalName();
-        Path path = TestUtils.getTestCaseDir(testCase);
-        return Paths.get("src/test/java/de/arthurpicht/barnacleGeneratorTest/" + testCase);
     }
 
     public static Path getJavaGenTestCaseDir(String testGroupId, String testCaseId) {
@@ -56,4 +43,13 @@ public class TestPaths {
             throw new RuntimeException("Directory [" + path.toAbsolutePath() + "] not found.");
     }
 
+    public static Path getTestCaseDir(Object testCase) {
+        String canonicalName = testCase.getClass().getCanonicalName();
+        return getTestCaseDir(canonicalName);
+    }
+
+    public static Path getTestCaseDir(String canonicalName) {
+        String packageName = canonicalName.substring(0, canonicalName.lastIndexOf('.'));
+        return Paths.get("src/test/java").resolve(packageName.replace('.', '/'));
+    }
 }

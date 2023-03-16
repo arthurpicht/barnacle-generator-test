@@ -1,5 +1,7 @@
 package de.arthurpicht.barnacleGeneratorTest.connectionManager;
 
+import de.arthurpicht.barnacleGeneratorTest.utils.TestUtils;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,20 +13,9 @@ public class ConnectionManager {
     static final String PASS = "sa";
 
     public static Connection openConnection(Class<?> aClass) throws DataSourceException {
-
-        String canonicalName = aClass.getCanonicalName();
-        int begin = canonicalName.indexOf("tc");
-        if (begin < 0)
-            throw new IllegalArgumentException(
-                    "package tc* not found in canonical class name: [" + canonicalName + "].");
-        int end = canonicalName.indexOf(".", begin);
-        String testCaseId = canonicalName.substring(begin, end);
-
-        System.out.println("TestCaseId: " + testCaseId);
-
-        String dbUrl = "jdbc:h2:./db/" + testCaseId;
-
-        Connection conn = null;
+        String testGroupId = TestUtils.getTestGroupId(aClass.getCanonicalName());
+        String testCaseId = TestUtils.getTestCaseId(aClass.getCanonicalName());
+        String dbUrl = "jdbc:h2:./db/" + testGroupId + "_" + testCaseId;
         try {
             Class.forName(JDBC_DRIVER);
             return DriverManager.getConnection(dbUrl, USER, PASS);

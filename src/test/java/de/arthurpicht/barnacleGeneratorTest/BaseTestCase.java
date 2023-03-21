@@ -11,7 +11,6 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,7 +33,7 @@ public abstract class BaseTestCase {
 
     @Test
     @Order(1)
-    public void generateSchema() throws IOException {
+    public void generate() throws IOException {
         GeneratorConfiguration generatorConfiguration = GeneratorConfigCreator.create(this);
         BarnacleGenerator.process(generatorConfiguration);
 

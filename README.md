@@ -2,15 +2,36 @@
 
 Automatic integration tests for [Barnacle](https://github.com/arthurpicht/Barnacle) generator functionality.
 
-See repo [barnacle-runtime-test] for integration tests for Barnacle execution functionality.
+See repo [barnacle-runtime-test](https://github.com/arthurpicht/barnacle-runtime-test) for integration tests for Barnacle execution functionality.
 
 ## Tests
+
+### test group 01: basic functionality
 
 * **TC_01**: Simple entity with simple primary key, smoke test
 * **TC_02**: composite primary key, custom table name
 * **TC_03**: mapping of basic an object types
 * **TC_04**: auto increment fields
-* **TC_05**: 1:1-relationship, PK-to-PK, single PK key field
-* **TC_06**: 1:1-relationship, PK-to-PK, composite PK keys
-* **TC_07**: 1:1-relationship, UK-toPK, single PK key field
-* 
+* **TC_05**: unique key
+* **TC_06**: unique key composite
+
+### test group 02: 1-to-1 relationship
+
+* **TC_01**: 1:1-relationship, PK-to-PK, single PK key field
+* **TC_02**: 1:1-relationship, PK-to-PK, composite PK keys
+* **TC_03**: 1:1-relationship, UK-toPK, single PK key field
+* **TC_04**: 1:1-relationship, UK-toPK, composite PK keys
+
+### test group 03: n-to-m relationship
+
+* **TC_01**: n:m-relationship, association table, single PK fields on both related entities
+* **TC_02**: n:m-relationship, association table, single PK field on one entity, composite PK fields on other entities
+* **TC_03**: n:m-relationship, association table, composite PK fields on both entities
+
+## What is tested?
+
+Execution of test cases causes DAOs, VOs and database schema (H2 dialect) to be generated.
+
+Currently, only schema generation is tested against specified expectations. 
+
+Execution all tests successfully is a precondition for executing tests included in project [barnacle-runtime-test](https://github.com/arthurpicht/barnacle-runtime-test). 

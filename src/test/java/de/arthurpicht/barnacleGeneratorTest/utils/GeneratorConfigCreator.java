@@ -33,6 +33,7 @@ public class GeneratorConfigCreator {
         generatorConfigurationBuilder.withEntityNotFoundExceptionCanonicalClassName(
                 "de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException"
         );
+        generatorConfigurationBuilder.withOmitJavaDoc();
 
         return generatorConfigurationBuilder.build();
     }

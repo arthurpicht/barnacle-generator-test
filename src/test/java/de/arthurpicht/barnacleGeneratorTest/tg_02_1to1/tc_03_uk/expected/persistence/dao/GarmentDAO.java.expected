@@ -1,0 +1,171 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_03.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_03.persistence.vo.GarmentVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class GarmentDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GarmentDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO garment (id, name) VALUES (?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM garment WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM garment WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE garment SET name = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM garment";
+	
+	public static void create(GarmentVO garmentVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentDAO.class);
+		try {
+			create(garmentVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentDAO.class);
+		}
+	}
+	
+	public static void create(GarmentVO garmentVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, garmentVO.getId());
+		preparedStatement.setString(2, garmentVO.getName());
+		logger.debug(CREATE_STATEMENT + " [" + garmentVO.getId() + "][" + garmentVO.getName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<GarmentVO> garmentVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentDAO.class);
+		try {
+			create(garmentVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentDAO.class);
+		}
+	}
+	
+	public static void create(List<GarmentVO> garmentVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (GarmentVO garmentVO : garmentVOs) {
+			preparedStatement.setString(1, garmentVO.getId());
+			preparedStatement.setString(2, garmentVO.getName());
+			logger.debug(CREATE_STATEMENT + " [" + garmentVO.getId() + "][" + garmentVO.getName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static GarmentVO load(String id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(GarmentDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentDAO.class);
+		}
+	}
+	
+	public static GarmentVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				GarmentVO garmentVO = new GarmentVO(id);
+				garmentVO.setName(resultSet.getString("name"));
+				return garmentVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'garment' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(String id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentDAO.class);
+		}
+	}
+	
+	public static void delete(String id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(GarmentVO garmentVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentDAO.class);
+		try {
+			update(garmentVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentDAO.class);
+		}
+	}
+	
+	public static void update(GarmentVO garmentVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, garmentVO.getName());
+		preparedStatement.setString(2, garmentVO.getId());
+		logger.debug(UPDATE_STATEMENT + " [" + garmentVO.getName() + "][" + garmentVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<GarmentVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentDAO.class);
+		}
+	}
+	
+	public static List<GarmentVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<GarmentVO> garmentVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String name = resultSet.getString("name");
+				GarmentVO garmentVO = new GarmentVO(id);
+				garmentVO.setName(name);
+				garmentVOs.add(garmentVO);
+			}
+			return garmentVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

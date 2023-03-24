@@ -1,0 +1,93 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vof.GarmentCompositeVOF;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.dao.PersonCompositeDAO;
+import java.util.List;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+
+public class GarmentCompositeVO extends GarmentCompositeVOF implements Cloneable {
+	
+	public static final String TABLENAME = "garment_composite";
+	public static final String ID1 = "id1";
+	public static final String ID2 = "id2";
+	public static final String NAME = "name";
+	
+	public GarmentCompositeVO(GarmentCompositePK garmentCompositePK) {
+		this.id1=garmentCompositePK.getId1();
+		this.id2=garmentCompositePK.getId2();
+	}
+	
+	public GarmentCompositePK getPK() {
+		GarmentCompositePK garmentCompositePK = new GarmentCompositePK(this.id1, this.id2);
+		return garmentCompositePK;
+	}
+	
+	public String getId1() {
+		return this.id1;
+	}
+	
+	public void setId1(String id1) {
+		this.id1=id1;
+	}
+	
+	public String getId2() {
+		return this.id2;
+	}
+	
+	public void setId2(String id2) {
+		this.id2=id2;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name=name;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vo.GarmentCompositeVO["
+			+ "id1=" + this.id1 + "; "
+			+ "id2=" + this.id2 + "; "
+			+ "name=" + this.name
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public List<PersonCompositeVO> getPersonCompositeVOByFk_person_garment() throws DataSourceException {
+		return PersonCompositeDAO.findByFk_person_garment(this.id1, this.id2);
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		GarmentCompositeVO other = (GarmentCompositeVO) o;
+		if (this.id1 == null) {
+			if (other.getId1() != null) return false;
+		} else {
+			if (!this.id1.equals(other.getId1())) return false;
+		}
+		if (this.id2 == null) {
+			if (other.getId2() != null) return false;
+		} else {
+			if (!this.id2.equals(other.getId2())) return false;
+		}
+		if (this.name == null) {
+			if (other.getName() != null) return false;
+		} else {
+			if (!this.name.equals(other.getName())) return false;
+		}
+		return true;
+	}
+	
+}

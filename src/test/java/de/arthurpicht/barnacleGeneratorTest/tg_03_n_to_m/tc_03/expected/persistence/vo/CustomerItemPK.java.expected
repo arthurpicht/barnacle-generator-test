@@ -1,0 +1,89 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vof.CustomerItemVOF;
+
+public class CustomerItemPK extends CustomerItemVOF {
+	
+	public static final String CUSTOMERIDPART1 = "customerIdPart1";
+	public static final String CUSTOMERIDPART2 = "customerIdPart2";
+	public static final String ITEMID1 = "itemId1";
+	public static final String ITEMID2 = "itemId2";
+	
+	public CustomerItemPK(String customerIdPart1, String customerIdPart2, String itemId1, String itemId2) {
+		this.customerIdPart1=customerIdPart1;
+		this.customerIdPart2=customerIdPart2;
+		this.itemId1=itemId1;
+		this.itemId2=itemId2;
+	}
+	
+	public String getCustomerIdPart1() {
+		return this.customerIdPart1;
+	}
+	
+	public void setCustomerIdPart1(String customerIdPart1) {
+		this.customerIdPart1=customerIdPart1;
+	}
+	
+	public String getCustomerIdPart2() {
+		return this.customerIdPart2;
+	}
+	
+	public void setCustomerIdPart2(String customerIdPart2) {
+		this.customerIdPart2=customerIdPart2;
+	}
+	
+	public String getItemId1() {
+		return this.itemId1;
+	}
+	
+	public void setItemId1(String itemId1) {
+		this.itemId1=itemId1;
+	}
+	
+	public String getItemId2() {
+		return this.itemId2;
+	}
+	
+	public void setItemId2(String itemId2) {
+		this.itemId2=itemId2;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo.CustomerItemPK["
+			+ "customerIdPart1=" + this.customerIdPart1 + "; "
+			+ "customerIdPart2=" + this.customerIdPart2 + "; "
+			+ "itemId1=" + this.itemId1 + "; "
+			+ "itemId2=" + this.itemId2
+			+ "]";
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		CustomerItemPK other = (CustomerItemPK) o;
+		if (this.customerIdPart1 == null) {
+			if (other.getCustomerIdPart1() != null) return false;
+		} else {
+			if (!this.customerIdPart1.equals(other.getCustomerIdPart1())) return false;
+		}
+		if (this.customerIdPart2 == null) {
+			if (other.getCustomerIdPart2() != null) return false;
+		} else {
+			if (!this.customerIdPart2.equals(other.getCustomerIdPart2())) return false;
+		}
+		if (this.itemId1 == null) {
+			if (other.getItemId1() != null) return false;
+		} else {
+			if (!this.itemId1.equals(other.getItemId1())) return false;
+		}
+		if (this.itemId2 == null) {
+			if (other.getItemId2() != null) return false;
+		} else {
+			if (!this.itemId2.equals(other.getItemId2())) return false;
+		}
+		return true;
+	}
+	
+}

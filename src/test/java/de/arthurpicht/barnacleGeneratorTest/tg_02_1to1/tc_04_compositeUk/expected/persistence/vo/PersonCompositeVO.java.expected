@@ -1,0 +1,95 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vof.PersonCompositeVOF;
+
+public class PersonCompositeVO extends PersonCompositeVOF implements Cloneable {
+	
+	public static final String TABLENAME = "personcomposite";
+	public static final String ID = "id";
+	public static final String USERNAME = "userName";
+	public static final String FAVORITEGARMENTID1 = "favoriteGarmentId1";
+	public static final String FAVORITEGARMENTID2 = "favoriteGarmentId2";
+	
+	public PersonCompositeVO(String id) {
+		this.id=id;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		this.id=id;
+	}
+	
+	public String getUserName() {
+		return this.userName;
+	}
+	
+	public void setUserName(String userName) {
+		this.userName=userName;
+	}
+	
+	public String getFavoriteGarmentId1() {
+		return this.favoriteGarmentId1;
+	}
+	
+	public void setFavoriteGarmentId1(String favoriteGarmentId1) {
+		this.favoriteGarmentId1=favoriteGarmentId1;
+	}
+	
+	public String getFavoriteGarmentId2() {
+		return this.favoriteGarmentId2;
+	}
+	
+	public void setFavoriteGarmentId2(String favoriteGarmentId2) {
+		this.favoriteGarmentId2=favoriteGarmentId2;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vo.PersonCompositeVO["
+			+ "id=" + this.id + "; "
+			+ "userName=" + this.userName + "; "
+			+ "favoriteGarmentId1=" + this.favoriteGarmentId1 + "; "
+			+ "favoriteGarmentId2=" + this.favoriteGarmentId2
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		PersonCompositeVO other = (PersonCompositeVO) o;
+		if (this.id == null) {
+			if (other.getId() != null) return false;
+		} else {
+			if (!this.id.equals(other.getId())) return false;
+		}
+		if (this.userName == null) {
+			if (other.getUserName() != null) return false;
+		} else {
+			if (!this.userName.equals(other.getUserName())) return false;
+		}
+		if (this.favoriteGarmentId1 == null) {
+			if (other.getFavoriteGarmentId1() != null) return false;
+		} else {
+			if (!this.favoriteGarmentId1.equals(other.getFavoriteGarmentId1())) return false;
+		}
+		if (this.favoriteGarmentId2 == null) {
+			if (other.getFavoriteGarmentId2() != null) return false;
+		} else {
+			if (!this.favoriteGarmentId2.equals(other.getFavoriteGarmentId2())) return false;
+		}
+		return true;
+	}
+	
+}

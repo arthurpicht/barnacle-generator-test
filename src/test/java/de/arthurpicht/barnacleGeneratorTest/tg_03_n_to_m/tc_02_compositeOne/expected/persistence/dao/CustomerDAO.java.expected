@@ -1,0 +1,179 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vo.CustomerVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vo.CustomerPK;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class CustomerDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(CustomerDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO customer (id_part_1, id_part_2, name) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM customer WHERE id_part_1 = ? AND id_part_2 = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM customer WHERE id_part_1 = ? AND id_part_2 = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE customer SET name = ? WHERE id_part_1 = ? AND id_part_2 = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM customer";
+	
+	public static void create(CustomerVO customerVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerDAO.class);
+		try {
+			create(customerVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerDAO.class);
+		}
+	}
+	
+	public static void create(CustomerVO customerVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, customerVO.getIdPart1());
+		preparedStatement.setString(2, customerVO.getIdPart2());
+		preparedStatement.setString(3, customerVO.getName());
+		logger.debug(CREATE_STATEMENT + " [" + customerVO.getIdPart1() + "][" + customerVO.getIdPart2() + "][" + customerVO.getName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<CustomerVO> customerVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerDAO.class);
+		try {
+			create(customerVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerDAO.class);
+		}
+	}
+	
+	public static void create(List<CustomerVO> customerVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (CustomerVO customerVO : customerVOs) {
+			preparedStatement.setString(1, customerVO.getIdPart1());
+			preparedStatement.setString(2, customerVO.getIdPart2());
+			preparedStatement.setString(3, customerVO.getName());
+			logger.debug(CREATE_STATEMENT + " [" + customerVO.getIdPart1() + "][" + customerVO.getIdPart2() + "][" + customerVO.getName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static CustomerVO load(CustomerPK customerPK) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(CustomerDAO.class);
+		try {
+			return load(customerPK, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerDAO.class);
+		}
+	}
+	
+	public static CustomerVO load(CustomerPK customerPK, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, customerPK.getIdPart1());
+		preparedStatement.setString(2, customerPK.getIdPart2());
+		logger.debug(LOAD_STATEMENT + " [" + customerPK.getIdPart1() + "][" + customerPK.getIdPart2() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				CustomerVO customerVO = new CustomerVO(customerPK);
+				customerVO.setName(resultSet.getString("name"));
+				return customerVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'customer' with primary key CustomerPK = [" + customerPK + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(CustomerPK customerPK) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerDAO.class);
+		try {
+			delete(customerPK, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerDAO.class);
+		}
+	}
+	
+	public static void delete(CustomerPK customerPK, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, customerPK.getIdPart1());
+		preparedStatement.setString(2, customerPK.getIdPart2());
+		logger.debug(DELETE_STATEMENT + " [" + customerPK.getIdPart1() + "][" + customerPK.getIdPart2() + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(CustomerVO customerVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerDAO.class);
+		try {
+			update(customerVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerDAO.class);
+		}
+	}
+	
+	public static void update(CustomerVO customerVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, customerVO.getName());
+		preparedStatement.setString(2, customerVO.getIdPart1());
+		preparedStatement.setString(3, customerVO.getIdPart2());
+		logger.debug(UPDATE_STATEMENT + " [" + customerVO.getName() + "][" + customerVO.getIdPart1() + "][" + customerVO.getIdPart2() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<CustomerVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerDAO.class);
+		}
+	}
+	
+	public static List<CustomerVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<CustomerVO> customerVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String idPart1 = resultSet.getString("id_part_1");
+				String idPart2 = resultSet.getString("id_part_2");
+				String name = resultSet.getString("name");
+				CustomerPK customerPK = new CustomerPK(idPart1, idPart2);
+				CustomerVO customerVO = new CustomerVO(customerPK);
+				customerVO.setName(name);
+				customerVOs.add(customerVO);
+			}
+			return customerVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

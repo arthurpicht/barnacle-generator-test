@@ -1,0 +1,255 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vo.PersonCompositeVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class PersonCompositeDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(PersonCompositeDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO personcomposite (id, userName, favoriteGarmentId1, favoriteGarmentId2) VALUES (?, ?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM personcomposite WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM personcomposite WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE personcomposite SET userName = ?, favoriteGarmentId1 = ?, favoriteGarmentId2 = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM personcomposite";
+	private static final String FK_PERSON_GARMENT_STATEMENT = "SELECT * FROM personcomposite WHERE favoriteGarmentId1 = ? AND favoriteGarmentId2 = ?";
+	private static final String UK_1_STATEMENT = "SELECT * FROM personcomposite WHERE favoriteGarmentId1 = ? AND favoriteGarmentId2 = ?";
+	
+	public static void create(PersonCompositeVO personCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			create(personCompositeVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static void create(PersonCompositeVO personCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, personCompositeVO.getId());
+		preparedStatement.setString(2, personCompositeVO.getUserName());
+		preparedStatement.setString(3, personCompositeVO.getFavoriteGarmentId1());
+		preparedStatement.setString(4, personCompositeVO.getFavoriteGarmentId2());
+		logger.debug(CREATE_STATEMENT + " [" + personCompositeVO.getId() + "][" + personCompositeVO.getUserName() + "][" + personCompositeVO.getFavoriteGarmentId1() + "][" + personCompositeVO.getFavoriteGarmentId2() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<PersonCompositeVO> personCompositeVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			create(personCompositeVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static void create(List<PersonCompositeVO> personCompositeVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (PersonCompositeVO personCompositeVO : personCompositeVOs) {
+			preparedStatement.setString(1, personCompositeVO.getId());
+			preparedStatement.setString(2, personCompositeVO.getUserName());
+			preparedStatement.setString(3, personCompositeVO.getFavoriteGarmentId1());
+			preparedStatement.setString(4, personCompositeVO.getFavoriteGarmentId2());
+			logger.debug(CREATE_STATEMENT + " [" + personCompositeVO.getId() + "][" + personCompositeVO.getUserName() + "][" + personCompositeVO.getFavoriteGarmentId1() + "][" + personCompositeVO.getFavoriteGarmentId2() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static PersonCompositeVO load(String id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static PersonCompositeVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				PersonCompositeVO personCompositeVO = new PersonCompositeVO(id);
+				personCompositeVO.setUserName(resultSet.getString("userName"));
+				personCompositeVO.setFavoriteGarmentId1(resultSet.getString("favoriteGarmentId1"));
+				personCompositeVO.setFavoriteGarmentId2(resultSet.getString("favoriteGarmentId2"));
+				return personCompositeVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'personcomposite' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(String id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static void delete(String id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(PersonCompositeVO personCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			update(personCompositeVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static void update(PersonCompositeVO personCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, personCompositeVO.getUserName());
+		preparedStatement.setString(2, personCompositeVO.getFavoriteGarmentId1());
+		preparedStatement.setString(3, personCompositeVO.getFavoriteGarmentId2());
+		preparedStatement.setString(4, personCompositeVO.getId());
+		logger.debug(UPDATE_STATEMENT + " [" + personCompositeVO.getUserName() + "][" + personCompositeVO.getFavoriteGarmentId1() + "][" + personCompositeVO.getFavoriteGarmentId2() + "][" + personCompositeVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<PersonCompositeVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static List<PersonCompositeVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<PersonCompositeVO> personCompositeVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String userName = resultSet.getString("userName");
+				String favoriteGarmentId1 = resultSet.getString("favoriteGarmentId1");
+				String favoriteGarmentId2 = resultSet.getString("favoriteGarmentId2");
+				PersonCompositeVO personCompositeVO = new PersonCompositeVO(id);
+				personCompositeVO.setUserName(userName);
+				personCompositeVO.setFavoriteGarmentId1(favoriteGarmentId1);
+				personCompositeVO.setFavoriteGarmentId2(favoriteGarmentId2);
+				personCompositeVOs.add(personCompositeVO);
+			}
+			return personCompositeVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static List<PersonCompositeVO> findByFk_person_garment(String favoriteGarmentId1, String favoriteGarmentId2) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			return findByFk_person_garment(favoriteGarmentId1, favoriteGarmentId2, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static List<PersonCompositeVO> findByFk_person_garment(String favoriteGarmentId1, String favoriteGarmentId2, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(FK_PERSON_GARMENT_STATEMENT);
+		preparedStatement.setString(1, favoriteGarmentId1);
+		preparedStatement.setString(2, favoriteGarmentId2);
+		logger.debug(FK_PERSON_GARMENT_STATEMENT + " [" + favoriteGarmentId1 + "][" + favoriteGarmentId2 + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		List<PersonCompositeVO> personCompositeVOList = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String userName = resultSet.getString("userName");
+				PersonCompositeVO personCompositeVO = new PersonCompositeVO(id);
+				personCompositeVO.setUserName(userName);
+				personCompositeVO.setFavoriteGarmentId1(favoriteGarmentId1);
+				personCompositeVO.setFavoriteGarmentId2(favoriteGarmentId2);
+				personCompositeVOList.add(personCompositeVO);
+			}
+			return personCompositeVOList;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static PersonCompositeVO findByUk_1(String favoriteGarmentId1, String favoriteGarmentId2) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			return findByUk_1(favoriteGarmentId1, favoriteGarmentId2, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static PersonCompositeVO findByUk_1(String favoriteGarmentId1, String favoriteGarmentId2, Connection connection) throws EntityNotFoundException, SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UK_1_STATEMENT);
+		preparedStatement.setString(1, favoriteGarmentId1);
+		preparedStatement.setString(2, favoriteGarmentId2);
+		logger.debug(UK_1_STATEMENT + " [" + favoriteGarmentId1 + "][" + favoriteGarmentId2 + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String userName = resultSet.getString("userName");
+				PersonCompositeVO personCompositeVO = new PersonCompositeVO(id);
+				personCompositeVO.setUserName(userName);
+				personCompositeVO.setFavoriteGarmentId1(favoriteGarmentId1);
+				personCompositeVO.setFavoriteGarmentId2(favoriteGarmentId2);
+				return personCompositeVO;
+			} else {
+				throw new EntityNotFoundException("personcomposite-Entity with unique key 'uk_1'[favoriteGarmentId1 = " + favoriteGarmentId1 + ", favoriteGarmentId2 = " + favoriteGarmentId2 + "] does not exist!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

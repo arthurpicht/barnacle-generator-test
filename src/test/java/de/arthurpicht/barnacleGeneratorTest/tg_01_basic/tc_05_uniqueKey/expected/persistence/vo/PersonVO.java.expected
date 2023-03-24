@@ -1,0 +1,80 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_05.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_05.persistence.vof.PersonVOF;
+
+public class PersonVO extends PersonVOF implements Cloneable {
+	
+	public static final String TABLENAME = "person";
+	public static final String ID = "id";
+	public static final String USERNAME = "userName";
+	public static final String FIRSTNAME = "firstName";
+	
+	public PersonVO(String id) {
+		this.id=id;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		this.id=id;
+	}
+	
+	public String getUserName() {
+		return this.userName;
+	}
+	
+	public void setUserName(String userName) {
+		this.userName=userName;
+	}
+	
+	public String getFirstName() {
+		return this.firstName;
+	}
+	
+	public void setFirstName(String firstName) {
+		this.firstName=firstName;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_01.tc_05.persistence.vo.PersonVO["
+			+ "id=" + this.id + "; "
+			+ "userName=" + this.userName + "; "
+			+ "firstName=" + this.firstName
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		PersonVO other = (PersonVO) o;
+		if (this.id == null) {
+			if (other.getId() != null) return false;
+		} else {
+			if (!this.id.equals(other.getId())) return false;
+		}
+		if (this.userName == null) {
+			if (other.getUserName() != null) return false;
+		} else {
+			if (!this.userName.equals(other.getUserName())) return false;
+		}
+		if (this.firstName == null) {
+			if (other.getFirstName() != null) return false;
+		} else {
+			if (!this.firstName.equals(other.getFirstName())) return false;
+		}
+		return true;
+	}
+	
+}

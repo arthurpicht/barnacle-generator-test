@@ -1,0 +1,73 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vof.CustomerItemVOF;
+
+public class CustomerItemPK extends CustomerItemVOF {
+	
+	public static final String CUSTOMERIDPART1 = "customerIdPart1";
+	public static final String CUSTOMERIDPART2 = "customerIdPart2";
+	public static final String ITEMID = "itemId";
+	
+	public CustomerItemPK(String customerIdPart1, String customerIdPart2, String itemId) {
+		this.customerIdPart1=customerIdPart1;
+		this.customerIdPart2=customerIdPart2;
+		this.itemId=itemId;
+	}
+	
+	public String getCustomerIdPart1() {
+		return this.customerIdPart1;
+	}
+	
+	public void setCustomerIdPart1(String customerIdPart1) {
+		this.customerIdPart1=customerIdPart1;
+	}
+	
+	public String getCustomerIdPart2() {
+		return this.customerIdPart2;
+	}
+	
+	public void setCustomerIdPart2(String customerIdPart2) {
+		this.customerIdPart2=customerIdPart2;
+	}
+	
+	public String getItemId() {
+		return this.itemId;
+	}
+	
+	public void setItemId(String itemId) {
+		this.itemId=itemId;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vo.CustomerItemPK["
+			+ "customerIdPart1=" + this.customerIdPart1 + "; "
+			+ "customerIdPart2=" + this.customerIdPart2 + "; "
+			+ "itemId=" + this.itemId
+			+ "]";
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		CustomerItemPK other = (CustomerItemPK) o;
+		if (this.customerIdPart1 == null) {
+			if (other.getCustomerIdPart1() != null) return false;
+		} else {
+			if (!this.customerIdPart1.equals(other.getCustomerIdPart1())) return false;
+		}
+		if (this.customerIdPart2 == null) {
+			if (other.getCustomerIdPart2() != null) return false;
+		} else {
+			if (!this.customerIdPart2.equals(other.getCustomerIdPart2())) return false;
+		}
+		if (this.itemId == null) {
+			if (other.getItemId() != null) return false;
+		} else {
+			if (!this.itemId.equals(other.getItemId())) return false;
+		}
+		return true;
+	}
+	
+}

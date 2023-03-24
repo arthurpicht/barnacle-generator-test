@@ -1,0 +1,213 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo.AddressCompositeVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo.AddressCompositePK;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class AddressCompositeDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AddressCompositeDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO addresscomposite (userId1, userId2, email) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM addresscomposite WHERE userId1 = ? AND userId2 = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM addresscomposite WHERE userId1 = ? AND userId2 = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE addresscomposite SET email = ? WHERE userId1 = ? AND userId2 = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM addresscomposite";
+	private static final String FK_ADDRESS_COMPOSITE_STATEMENT = "SELECT * FROM addresscomposite WHERE userId1 = ? AND userId2 = ?";
+	
+	public static void create(AddressCompositeVO addressCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AddressCompositeDAO.class);
+		try {
+			create(addressCompositeVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AddressCompositeDAO.class);
+		}
+	}
+	
+	public static void create(AddressCompositeVO addressCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, addressCompositeVO.getUserId1());
+		preparedStatement.setString(2, addressCompositeVO.getUserId2());
+		preparedStatement.setString(3, addressCompositeVO.getEmail());
+		logger.debug(CREATE_STATEMENT + " [" + addressCompositeVO.getUserId1() + "][" + addressCompositeVO.getUserId2() + "][" + addressCompositeVO.getEmail() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<AddressCompositeVO> addressCompositeVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AddressCompositeDAO.class);
+		try {
+			create(addressCompositeVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AddressCompositeDAO.class);
+		}
+	}
+	
+	public static void create(List<AddressCompositeVO> addressCompositeVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (AddressCompositeVO addressCompositeVO : addressCompositeVOs) {
+			preparedStatement.setString(1, addressCompositeVO.getUserId1());
+			preparedStatement.setString(2, addressCompositeVO.getUserId2());
+			preparedStatement.setString(3, addressCompositeVO.getEmail());
+			logger.debug(CREATE_STATEMENT + " [" + addressCompositeVO.getUserId1() + "][" + addressCompositeVO.getUserId2() + "][" + addressCompositeVO.getEmail() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static AddressCompositeVO load(AddressCompositePK addressCompositePK) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(AddressCompositeDAO.class);
+		try {
+			return load(addressCompositePK, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AddressCompositeDAO.class);
+		}
+	}
+	
+	public static AddressCompositeVO load(AddressCompositePK addressCompositePK, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, addressCompositePK.getUserId1());
+		preparedStatement.setString(2, addressCompositePK.getUserId2());
+		logger.debug(LOAD_STATEMENT + " [" + addressCompositePK.getUserId1() + "][" + addressCompositePK.getUserId2() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				AddressCompositeVO addressCompositeVO = new AddressCompositeVO(addressCompositePK);
+				addressCompositeVO.setEmail(resultSet.getString("email"));
+				return addressCompositeVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'addresscomposite' with primary key AddressCompositePK = [" + addressCompositePK + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(AddressCompositePK addressCompositePK) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AddressCompositeDAO.class);
+		try {
+			delete(addressCompositePK, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AddressCompositeDAO.class);
+		}
+	}
+	
+	public static void delete(AddressCompositePK addressCompositePK, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, addressCompositePK.getUserId1());
+		preparedStatement.setString(2, addressCompositePK.getUserId2());
+		logger.debug(DELETE_STATEMENT + " [" + addressCompositePK.getUserId1() + "][" + addressCompositePK.getUserId2() + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(AddressCompositeVO addressCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AddressCompositeDAO.class);
+		try {
+			update(addressCompositeVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AddressCompositeDAO.class);
+		}
+	}
+	
+	public static void update(AddressCompositeVO addressCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, addressCompositeVO.getEmail());
+		preparedStatement.setString(2, addressCompositeVO.getUserId1());
+		preparedStatement.setString(3, addressCompositeVO.getUserId2());
+		logger.debug(UPDATE_STATEMENT + " [" + addressCompositeVO.getEmail() + "][" + addressCompositeVO.getUserId1() + "][" + addressCompositeVO.getUserId2() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<AddressCompositeVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AddressCompositeDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AddressCompositeDAO.class);
+		}
+	}
+	
+	public static List<AddressCompositeVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<AddressCompositeVO> addressCompositeVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String userId1 = resultSet.getString("userId1");
+				String userId2 = resultSet.getString("userId2");
+				String email = resultSet.getString("email");
+				AddressCompositePK addressCompositePK = new AddressCompositePK(userId1, userId2);
+				AddressCompositeVO addressCompositeVO = new AddressCompositeVO(addressCompositePK);
+				addressCompositeVO.setEmail(email);
+				addressCompositeVOs.add(addressCompositeVO);
+			}
+			return addressCompositeVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static List<AddressCompositeVO> findByFk_address_composite(String userId1, String userId2) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AddressCompositeDAO.class);
+		try {
+			return findByFk_address_composite(userId1, userId2, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AddressCompositeDAO.class);
+		}
+	}
+	
+	public static List<AddressCompositeVO> findByFk_address_composite(String userId1, String userId2, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(FK_ADDRESS_COMPOSITE_STATEMENT);
+		preparedStatement.setString(1, userId1);
+		preparedStatement.setString(2, userId2);
+		logger.debug(FK_ADDRESS_COMPOSITE_STATEMENT + " [" + userId1 + "][" + userId2 + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		List<AddressCompositeVO> addressCompositeVOList = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String email = resultSet.getString("email");
+				AddressCompositePK addressCompositePK = new AddressCompositePK(userId1, userId2);
+				AddressCompositeVO addressCompositeVO = new AddressCompositeVO(addressCompositePK);
+				addressCompositeVO.setEmail(email);
+				addressCompositeVOList.add(addressCompositeVO);
+			}
+			return addressCompositeVOList;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

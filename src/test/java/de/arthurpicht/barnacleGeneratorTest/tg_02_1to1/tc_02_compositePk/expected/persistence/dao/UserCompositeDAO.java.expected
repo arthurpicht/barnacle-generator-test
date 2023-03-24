@@ -1,0 +1,179 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo.UserCompositeVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo.UserCompositePK;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class UserCompositeDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserCompositeDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO user_composite (id1, id2, userName) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM user_composite WHERE id1 = ? AND id2 = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM user_composite WHERE id1 = ? AND id2 = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE user_composite SET userName = ? WHERE id1 = ? AND id2 = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM user_composite";
+	
+	public static void create(UserCompositeVO userCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserCompositeDAO.class);
+		try {
+			create(userCompositeVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserCompositeDAO.class);
+		}
+	}
+	
+	public static void create(UserCompositeVO userCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, userCompositeVO.getId1());
+		preparedStatement.setString(2, userCompositeVO.getId2());
+		preparedStatement.setString(3, userCompositeVO.getUserName());
+		logger.debug(CREATE_STATEMENT + " [" + userCompositeVO.getId1() + "][" + userCompositeVO.getId2() + "][" + userCompositeVO.getUserName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<UserCompositeVO> userCompositeVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserCompositeDAO.class);
+		try {
+			create(userCompositeVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserCompositeDAO.class);
+		}
+	}
+	
+	public static void create(List<UserCompositeVO> userCompositeVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (UserCompositeVO userCompositeVO : userCompositeVOs) {
+			preparedStatement.setString(1, userCompositeVO.getId1());
+			preparedStatement.setString(2, userCompositeVO.getId2());
+			preparedStatement.setString(3, userCompositeVO.getUserName());
+			logger.debug(CREATE_STATEMENT + " [" + userCompositeVO.getId1() + "][" + userCompositeVO.getId2() + "][" + userCompositeVO.getUserName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static UserCompositeVO load(UserCompositePK userCompositePK) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(UserCompositeDAO.class);
+		try {
+			return load(userCompositePK, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserCompositeDAO.class);
+		}
+	}
+	
+	public static UserCompositeVO load(UserCompositePK userCompositePK, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, userCompositePK.getId1());
+		preparedStatement.setString(2, userCompositePK.getId2());
+		logger.debug(LOAD_STATEMENT + " [" + userCompositePK.getId1() + "][" + userCompositePK.getId2() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				UserCompositeVO userCompositeVO = new UserCompositeVO(userCompositePK);
+				userCompositeVO.setUserName(resultSet.getString("userName"));
+				return userCompositeVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'user_composite' with primary key UserCompositePK = [" + userCompositePK + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(UserCompositePK userCompositePK) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserCompositeDAO.class);
+		try {
+			delete(userCompositePK, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserCompositeDAO.class);
+		}
+	}
+	
+	public static void delete(UserCompositePK userCompositePK, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, userCompositePK.getId1());
+		preparedStatement.setString(2, userCompositePK.getId2());
+		logger.debug(DELETE_STATEMENT + " [" + userCompositePK.getId1() + "][" + userCompositePK.getId2() + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(UserCompositeVO userCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserCompositeDAO.class);
+		try {
+			update(userCompositeVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserCompositeDAO.class);
+		}
+	}
+	
+	public static void update(UserCompositeVO userCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, userCompositeVO.getUserName());
+		preparedStatement.setString(2, userCompositeVO.getId1());
+		preparedStatement.setString(3, userCompositeVO.getId2());
+		logger.debug(UPDATE_STATEMENT + " [" + userCompositeVO.getUserName() + "][" + userCompositeVO.getId1() + "][" + userCompositeVO.getId2() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<UserCompositeVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserCompositeDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserCompositeDAO.class);
+		}
+	}
+	
+	public static List<UserCompositeVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<UserCompositeVO> userCompositeVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id1 = resultSet.getString("id1");
+				String id2 = resultSet.getString("id2");
+				String userName = resultSet.getString("userName");
+				UserCompositePK userCompositePK = new UserCompositePK(id1, id2);
+				UserCompositeVO userCompositeVO = new UserCompositeVO(userCompositePK);
+				userCompositeVO.setUserName(userName);
+				userCompositeVOs.add(userCompositeVO);
+			}
+			return userCompositeVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

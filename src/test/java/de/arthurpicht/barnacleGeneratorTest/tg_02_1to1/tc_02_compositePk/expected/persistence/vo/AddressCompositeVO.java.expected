@@ -1,0 +1,86 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vof.AddressCompositeVOF;
+
+public class AddressCompositeVO extends AddressCompositeVOF implements Cloneable {
+	
+	public static final String TABLENAME = "addresscomposite";
+	public static final String USERID1 = "userId1";
+	public static final String USERID2 = "userId2";
+	public static final String EMAIL = "email";
+	
+	public AddressCompositeVO(AddressCompositePK addressCompositePK) {
+		this.userId1=addressCompositePK.getUserId1();
+		this.userId2=addressCompositePK.getUserId2();
+	}
+	
+	public AddressCompositePK getPK() {
+		AddressCompositePK addressCompositePK = new AddressCompositePK(this.userId1, this.userId2);
+		return addressCompositePK;
+	}
+	
+	public String getUserId1() {
+		return this.userId1;
+	}
+	
+	public void setUserId1(String userId1) {
+		this.userId1=userId1;
+	}
+	
+	public String getUserId2() {
+		return this.userId2;
+	}
+	
+	public void setUserId2(String userId2) {
+		this.userId2=userId2;
+	}
+	
+	public String getEmail() {
+		return this.email;
+	}
+	
+	public void setEmail(String email) {
+		this.email=email;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo.AddressCompositeVO["
+			+ "userId1=" + this.userId1 + "; "
+			+ "userId2=" + this.userId2 + "; "
+			+ "email=" + this.email
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		AddressCompositeVO other = (AddressCompositeVO) o;
+		if (this.userId1 == null) {
+			if (other.getUserId1() != null) return false;
+		} else {
+			if (!this.userId1.equals(other.getUserId1())) return false;
+		}
+		if (this.userId2 == null) {
+			if (other.getUserId2() != null) return false;
+		} else {
+			if (!this.userId2.equals(other.getUserId2())) return false;
+		}
+		if (this.email == null) {
+			if (other.getEmail() != null) return false;
+		} else {
+			if (!this.email.equals(other.getEmail())) return false;
+		}
+		return true;
+	}
+	
+}

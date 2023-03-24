@@ -1,0 +1,211 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_05.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_05.persistence.vo.PersonVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class PersonDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(PersonDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO person (id, userName, firstName) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM person WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM person WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE person SET userName = ?, firstName = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM person";
+	private static final String UK_USERNAME_STATEMENT = "SELECT * FROM person WHERE userName = ?";
+	
+	public static void create(PersonVO personVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonDAO.class);
+		try {
+			create(personVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonDAO.class);
+		}
+	}
+	
+	public static void create(PersonVO personVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, personVO.getId());
+		preparedStatement.setString(2, personVO.getUserName());
+		preparedStatement.setString(3, personVO.getFirstName());
+		logger.debug(CREATE_STATEMENT + " [" + personVO.getId() + "][" + personVO.getUserName() + "][" + personVO.getFirstName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<PersonVO> personVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonDAO.class);
+		try {
+			create(personVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonDAO.class);
+		}
+	}
+	
+	public static void create(List<PersonVO> personVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (PersonVO personVO : personVOs) {
+			preparedStatement.setString(1, personVO.getId());
+			preparedStatement.setString(2, personVO.getUserName());
+			preparedStatement.setString(3, personVO.getFirstName());
+			logger.debug(CREATE_STATEMENT + " [" + personVO.getId() + "][" + personVO.getUserName() + "][" + personVO.getFirstName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static PersonVO load(String id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(PersonDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonDAO.class);
+		}
+	}
+	
+	public static PersonVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				PersonVO personVO = new PersonVO(id);
+				personVO.setUserName(resultSet.getString("userName"));
+				personVO.setFirstName(resultSet.getString("firstName"));
+				return personVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'person' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(String id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonDAO.class);
+		}
+	}
+	
+	public static void delete(String id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(PersonVO personVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonDAO.class);
+		try {
+			update(personVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonDAO.class);
+		}
+	}
+	
+	public static void update(PersonVO personVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, personVO.getUserName());
+		preparedStatement.setString(2, personVO.getFirstName());
+		preparedStatement.setString(3, personVO.getId());
+		logger.debug(UPDATE_STATEMENT + " [" + personVO.getUserName() + "][" + personVO.getFirstName() + "][" + personVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<PersonVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonDAO.class);
+		}
+	}
+	
+	public static List<PersonVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<PersonVO> personVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String userName = resultSet.getString("userName");
+				String firstName = resultSet.getString("firstName");
+				PersonVO personVO = new PersonVO(id);
+				personVO.setUserName(userName);
+				personVO.setFirstName(firstName);
+				personVOs.add(personVO);
+			}
+			return personVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static PersonVO findByUk_userName(String userName) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(PersonDAO.class);
+		try {
+			return findByUk_userName(userName, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonDAO.class);
+		}
+	}
+	
+	public static PersonVO findByUk_userName(String userName, Connection connection) throws EntityNotFoundException, SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UK_USERNAME_STATEMENT);
+		preparedStatement.setString(1, userName);
+		logger.debug(UK_USERNAME_STATEMENT + " [" + userName + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String firstName = resultSet.getString("firstName");
+				PersonVO personVO = new PersonVO(id);
+				personVO.setUserName(userName);
+				personVO.setFirstName(firstName);
+				return personVO;
+			} else {
+				throw new EntityNotFoundException("person-Entity with unique key 'uk_userName'[userName = " + userName + "] does not exist!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

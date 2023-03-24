@@ -1,0 +1,179 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vo.PersonCompositeVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vo.PersonCompositePK;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class PersonCompositeDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(PersonCompositeDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO person_composite (first_name, last_name, age) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM person_composite WHERE first_name = ? AND last_name = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM person_composite WHERE first_name = ? AND last_name = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE person_composite SET age = ? WHERE first_name = ? AND last_name = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM person_composite";
+	
+	public static void create(PersonCompositeVO personCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			create(personCompositeVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static void create(PersonCompositeVO personCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, personCompositeVO.getFirstName());
+		preparedStatement.setString(2, personCompositeVO.getLastName());
+		preparedStatement.setInt(3, personCompositeVO.getAge());
+		logger.debug(CREATE_STATEMENT + " [" + personCompositeVO.getFirstName() + "][" + personCompositeVO.getLastName() + "][" + personCompositeVO.getAge() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<PersonCompositeVO> personCompositeVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			create(personCompositeVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static void create(List<PersonCompositeVO> personCompositeVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (PersonCompositeVO personCompositeVO : personCompositeVOs) {
+			preparedStatement.setString(1, personCompositeVO.getFirstName());
+			preparedStatement.setString(2, personCompositeVO.getLastName());
+			preparedStatement.setInt(3, personCompositeVO.getAge());
+			logger.debug(CREATE_STATEMENT + " [" + personCompositeVO.getFirstName() + "][" + personCompositeVO.getLastName() + "][" + personCompositeVO.getAge() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static PersonCompositeVO load(PersonCompositePK personCompositePK) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			return load(personCompositePK, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static PersonCompositeVO load(PersonCompositePK personCompositePK, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, personCompositePK.getFirstName());
+		preparedStatement.setString(2, personCompositePK.getLastName());
+		logger.debug(LOAD_STATEMENT + " [" + personCompositePK.getFirstName() + "][" + personCompositePK.getLastName() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				PersonCompositeVO personCompositeVO = new PersonCompositeVO(personCompositePK);
+				personCompositeVO.setAge(resultSet.getInt("age"));
+				return personCompositeVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'person_composite' with primary key PersonCompositePK = [" + personCompositePK + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(PersonCompositePK personCompositePK) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			delete(personCompositePK, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static void delete(PersonCompositePK personCompositePK, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, personCompositePK.getFirstName());
+		preparedStatement.setString(2, personCompositePK.getLastName());
+		logger.debug(DELETE_STATEMENT + " [" + personCompositePK.getFirstName() + "][" + personCompositePK.getLastName() + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(PersonCompositeVO personCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			update(personCompositeVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static void update(PersonCompositeVO personCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setInt(1, personCompositeVO.getAge());
+		preparedStatement.setString(2, personCompositeVO.getFirstName());
+		preparedStatement.setString(3, personCompositeVO.getLastName());
+		logger.debug(UPDATE_STATEMENT + " [" + personCompositeVO.getAge() + "][" + personCompositeVO.getFirstName() + "][" + personCompositeVO.getLastName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<PersonCompositeVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(PersonCompositeDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, PersonCompositeDAO.class);
+		}
+	}
+	
+	public static List<PersonCompositeVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<PersonCompositeVO> personCompositeVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String firstName = resultSet.getString("first_name");
+				String lastName = resultSet.getString("last_name");
+				int age = resultSet.getInt("age");
+				PersonCompositePK personCompositePK = new PersonCompositePK(firstName, lastName);
+				PersonCompositeVO personCompositeVO = new PersonCompositeVO(personCompositePK);
+				personCompositeVO.setAge(age);
+				personCompositeVOs.add(personCompositeVO);
+			}
+			return personCompositeVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

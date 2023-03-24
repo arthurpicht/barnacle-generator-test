@@ -1,0 +1,57 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vof.CustomerItemVOF;
+
+public class CustomerItemPK extends CustomerItemVOF {
+	
+	public static final String CUSTOMERID = "customerId";
+	public static final String ITEMID = "itemId";
+	
+	public CustomerItemPK(String customerId, String itemId) {
+		this.customerId=customerId;
+		this.itemId=itemId;
+	}
+	
+	public String getCustomerId() {
+		return this.customerId;
+	}
+	
+	public void setCustomerId(String customerId) {
+		this.customerId=customerId;
+	}
+	
+	public String getItemId() {
+		return this.itemId;
+	}
+	
+	public void setItemId(String itemId) {
+		this.itemId=itemId;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo.CustomerItemPK["
+			+ "customerId=" + this.customerId + "; "
+			+ "itemId=" + this.itemId
+			+ "]";
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		CustomerItemPK other = (CustomerItemPK) o;
+		if (this.customerId == null) {
+			if (other.getCustomerId() != null) return false;
+		} else {
+			if (!this.customerId.equals(other.getCustomerId())) return false;
+		}
+		if (this.itemId == null) {
+			if (other.getItemId() != null) return false;
+		} else {
+			if (!this.itemId.equals(other.getItemId())) return false;
+		}
+		return true;
+	}
+	
+}

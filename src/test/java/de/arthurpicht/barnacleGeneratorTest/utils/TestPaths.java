@@ -6,14 +6,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 public class TestPaths {
 
     public static Path getSql(Object testCase) {
         String canonicalName = testCase.getClass().getCanonicalName();
-        String testGroupId = TestUtils.getTestGroupId(canonicalName);
-        String testCaseId = TestUtils.getTestCaseId(canonicalName);
+        String testGroupId = TestIds.getTestGroupId(canonicalName);
+        String testCaseId = TestIds.getTestCaseId(canonicalName);
         Path path = getJavaGenTestCaseDir(testGroupId, testCaseId).resolve("sql/test.sql");
         assertFileExists(path);
         return path;
@@ -35,8 +34,8 @@ public class TestPaths {
 
     public static Path getJavaGenTestCasePersistenceDir(Object testCase) {
         String canonicalName = testCase.getClass().getCanonicalName();
-        String testGroupId = TestUtils.getTestGroupId(canonicalName);
-        String testCaseId = TestUtils.getTestCaseId(canonicalName);
+        String testGroupId = TestIds.getTestGroupId(canonicalName);
+        String testCaseId = TestIds.getTestCaseId(canonicalName);
         return getJavaGenTestCasePersistenceDir(testGroupId, testCaseId);
     }
 

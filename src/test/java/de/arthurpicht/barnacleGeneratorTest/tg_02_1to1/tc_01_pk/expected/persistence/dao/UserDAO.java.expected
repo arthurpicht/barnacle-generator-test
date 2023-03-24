@@ -1,0 +1,171 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_01.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_01.persistence.vo.UserVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class UserDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO user_table (id, userName) VALUES (?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM user_table WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM user_table WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE user_table SET userName = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM user_table";
+	
+	public static void create(UserVO userVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserDAO.class);
+		try {
+			create(userVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserDAO.class);
+		}
+	}
+	
+	public static void create(UserVO userVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, userVO.getId());
+		preparedStatement.setString(2, userVO.getUserName());
+		logger.debug(CREATE_STATEMENT + " [" + userVO.getId() + "][" + userVO.getUserName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<UserVO> userVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserDAO.class);
+		try {
+			create(userVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserDAO.class);
+		}
+	}
+	
+	public static void create(List<UserVO> userVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (UserVO userVO : userVOs) {
+			preparedStatement.setString(1, userVO.getId());
+			preparedStatement.setString(2, userVO.getUserName());
+			logger.debug(CREATE_STATEMENT + " [" + userVO.getId() + "][" + userVO.getUserName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static UserVO load(String id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(UserDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserDAO.class);
+		}
+	}
+	
+	public static UserVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				UserVO userVO = new UserVO(id);
+				userVO.setUserName(resultSet.getString("userName"));
+				return userVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'user_table' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(String id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserDAO.class);
+		}
+	}
+	
+	public static void delete(String id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(UserVO userVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserDAO.class);
+		try {
+			update(userVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserDAO.class);
+		}
+	}
+	
+	public static void update(UserVO userVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, userVO.getUserName());
+		preparedStatement.setString(2, userVO.getId());
+		logger.debug(UPDATE_STATEMENT + " [" + userVO.getUserName() + "][" + userVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<UserVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(UserDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, UserDAO.class);
+		}
+	}
+	
+	public static List<UserVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<UserVO> userVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String userName = resultSet.getString("userName");
+				UserVO userVO = new UserVO(id);
+				userVO.setUserName(userName);
+				userVOs.add(userVO);
+			}
+			return userVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

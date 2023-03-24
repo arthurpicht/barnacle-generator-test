@@ -1,0 +1,127 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.vof.BasicTypesVOF;
+
+public class BasicTypesVO extends BasicTypesVOF implements Cloneable {
+	
+	public static final String TABLENAME = "basic_types";
+	public static final String ID = "id";
+	public static final String MYBOOLEAN = "my_boolean";
+	public static final String MYINT = "my_int";
+	public static final String MYLONG = "my_long";
+	public static final String MYFLOAT = "my_float";
+	public static final String MYDOUBLE = "my_double";
+	public static final String MYBYTE = "my_byte";
+	public static final String MYSHORT = "my_short";
+	
+	public BasicTypesVO(String id) {
+		this.id=id;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		this.id=id;
+	}
+	
+	public boolean getMyBoolean() {
+		return this.myBoolean;
+	}
+	
+	public void setMyBoolean(boolean myBoolean) {
+		this.myBoolean=myBoolean;
+	}
+	
+	public int getMyInt() {
+		return this.myInt;
+	}
+	
+	public void setMyInt(int myInt) {
+		this.myInt=myInt;
+	}
+	
+	public long getMyLong() {
+		return this.myLong;
+	}
+	
+	public void setMyLong(long myLong) {
+		this.myLong=myLong;
+	}
+	
+	public float getMyFloat() {
+		return this.myFloat;
+	}
+	
+	public void setMyFloat(float myFloat) {
+		this.myFloat=myFloat;
+	}
+	
+	public double getMyDouble() {
+		return this.myDouble;
+	}
+	
+	public void setMyDouble(double myDouble) {
+		this.myDouble=myDouble;
+	}
+	
+	public byte getMyByte() {
+		return this.myByte;
+	}
+	
+	public void setMyByte(byte myByte) {
+		this.myByte=myByte;
+	}
+	
+	public short getMyShort() {
+		return this.myShort;
+	}
+	
+	public void setMyShort(short myShort) {
+		this.myShort=myShort;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.vo.BasicTypesVO["
+			+ "id=" + this.id + "; "
+			+ "myBoolean=" + this.myBoolean + "; "
+			+ "myInt=" + this.myInt + "; "
+			+ "myLong=" + this.myLong + "; "
+			+ "myFloat=" + this.myFloat + "; "
+			+ "myDouble=" + this.myDouble + "; "
+			+ "myByte=" + this.myByte + "; "
+			+ "myShort=" + this.myShort
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		BasicTypesVO other = (BasicTypesVO) o;
+		if (this.id == null) {
+			if (other.getId() != null) return false;
+		} else {
+			if (!this.id.equals(other.getId())) return false;
+		}
+		if (this.myBoolean != other.getMyBoolean()) return false;
+		if (this.myInt != other.getMyInt()) return false;
+		if (this.myLong != other.getMyLong()) return false;
+		if (this.myFloat != other.getMyFloat()) return false;
+		if (this.myDouble != other.getMyDouble()) return false;
+		if (this.myByte != other.getMyByte()) return false;
+		if (this.myShort != other.getMyShort()) return false;
+		return true;
+	}
+	
+}

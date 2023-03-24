@@ -7,8 +7,8 @@ import java.nio.file.Path;
 public class CleanUp {
 
     public static void cleanUp(Object testCase) {
-        String testGroupId = TestUtils.getTestGroupId(testCase);
-        String testCaseId = TestUtils.getTestCaseId(testCase);
+        String testGroupId = TestIds.getTestGroupId(testCase);
+        String testCaseId = TestIds.getTestCaseId(testCase);
         Path testCasePath = TestPaths.getJavaGenTestCaseDir(testGroupId, testCaseId);
         FileUtils.rmDirSilently(testCasePath);
     }

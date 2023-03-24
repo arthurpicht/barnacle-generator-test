@@ -1,0 +1,82 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vof.PersonCompositeVOF;
+
+public class PersonCompositeVO extends PersonCompositeVOF implements Cloneable {
+	
+	public static final String TABLENAME = "person_composite";
+	public static final String FIRSTNAME = "first_name";
+	public static final String LASTNAME = "last_name";
+	public static final String AGE = "age";
+	
+	public PersonCompositeVO(PersonCompositePK personCompositePK) {
+		this.firstName=personCompositePK.getFirstName();
+		this.lastName=personCompositePK.getLastName();
+	}
+	
+	public PersonCompositePK getPK() {
+		PersonCompositePK personCompositePK = new PersonCompositePK(this.firstName, this.lastName);
+		return personCompositePK;
+	}
+	
+	public String getFirstName() {
+		return this.firstName;
+	}
+	
+	public void setFirstName(String firstName) {
+		this.firstName=firstName;
+	}
+	
+	public String getLastName() {
+		return this.lastName;
+	}
+	
+	public void setLastName(String lastName) {
+		this.lastName=lastName;
+	}
+	
+	public int getAge() {
+		return this.age;
+	}
+	
+	public void setAge(int age) {
+		this.age=age;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vo.PersonCompositeVO["
+			+ "firstName=" + this.firstName + "; "
+			+ "lastName=" + this.lastName + "; "
+			+ "age=" + this.age
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		PersonCompositeVO other = (PersonCompositeVO) o;
+		if (this.firstName == null) {
+			if (other.getFirstName() != null) return false;
+		} else {
+			if (!this.firstName.equals(other.getFirstName())) return false;
+		}
+		if (this.lastName == null) {
+			if (other.getLastName() != null) return false;
+		} else {
+			if (!this.lastName.equals(other.getLastName())) return false;
+		}
+		if (this.age != other.getAge()) return false;
+		return true;
+	}
+	
+}

@@ -1,0 +1,57 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vof.CustomerVOF;
+
+public class CustomerPK extends CustomerVOF {
+	
+	public static final String IDPART1 = "id_part_1";
+	public static final String IDPART2 = "id_part_2";
+	
+	public CustomerPK(String idPart1, String idPart2) {
+		this.idPart1=idPart1;
+		this.idPart2=idPart2;
+	}
+	
+	public String getIdPart1() {
+		return this.idPart1;
+	}
+	
+	public void setIdPart1(String idPart1) {
+		this.idPart1=idPart1;
+	}
+	
+	public String getIdPart2() {
+		return this.idPart2;
+	}
+	
+	public void setIdPart2(String idPart2) {
+		this.idPart2=idPart2;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo.CustomerPK["
+			+ "idPart1=" + this.idPart1 + "; "
+			+ "idPart2=" + this.idPart2
+			+ "]";
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		CustomerPK other = (CustomerPK) o;
+		if (this.idPart1 == null) {
+			if (other.getIdPart1() != null) return false;
+		} else {
+			if (!this.idPart1.equals(other.getIdPart1())) return false;
+		}
+		if (this.idPart2 == null) {
+			if (other.getIdPart2() != null) return false;
+		} else {
+			if (!this.idPart2.equals(other.getIdPart2())) return false;
+		}
+		return true;
+	}
+	
+}

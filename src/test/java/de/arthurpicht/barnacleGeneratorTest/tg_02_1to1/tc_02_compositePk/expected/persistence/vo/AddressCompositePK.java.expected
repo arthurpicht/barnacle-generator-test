@@ -1,0 +1,57 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vof.AddressCompositeVOF;
+
+public class AddressCompositePK extends AddressCompositeVOF {
+	
+	public static final String USERID1 = "userId1";
+	public static final String USERID2 = "userId2";
+	
+	public AddressCompositePK(String userId1, String userId2) {
+		this.userId1=userId1;
+		this.userId2=userId2;
+	}
+	
+	public String getUserId1() {
+		return this.userId1;
+	}
+	
+	public void setUserId1(String userId1) {
+		this.userId1=userId1;
+	}
+	
+	public String getUserId2() {
+		return this.userId2;
+	}
+	
+	public void setUserId2(String userId2) {
+		this.userId2=userId2;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo.AddressCompositePK["
+			+ "userId1=" + this.userId1 + "; "
+			+ "userId2=" + this.userId2
+			+ "]";
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		AddressCompositePK other = (AddressCompositePK) o;
+		if (this.userId1 == null) {
+			if (other.getUserId1() != null) return false;
+		} else {
+			if (!this.userId1.equals(other.getUserId1())) return false;
+		}
+		if (this.userId2 == null) {
+			if (other.getUserId2() != null) return false;
+		} else {
+			if (!this.userId2.equals(other.getUserId2())) return false;
+		}
+		return true;
+	}
+	
+}

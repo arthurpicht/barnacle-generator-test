@@ -1,0 +1,57 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vof.ItemVOF;
+
+public class ItemPK extends ItemVOF {
+	
+	public static final String ID1 = "id1";
+	public static final String ID2 = "id2";
+	
+	public ItemPK(String id1, String id2) {
+		this.id1=id1;
+		this.id2=id2;
+	}
+	
+	public String getId1() {
+		return this.id1;
+	}
+	
+	public void setId1(String id1) {
+		this.id1=id1;
+	}
+	
+	public String getId2() {
+		return this.id2;
+	}
+	
+	public void setId2(String id2) {
+		this.id2=id2;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo.ItemPK["
+			+ "id1=" + this.id1 + "; "
+			+ "id2=" + this.id2
+			+ "]";
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		ItemPK other = (ItemPK) o;
+		if (this.id1 == null) {
+			if (other.getId1() != null) return false;
+		} else {
+			if (!this.id1.equals(other.getId1())) return false;
+		}
+		if (this.id2 == null) {
+			if (other.getId2() != null) return false;
+		} else {
+			if (!this.id2.equals(other.getId2())) return false;
+		}
+		return true;
+	}
+	
+}

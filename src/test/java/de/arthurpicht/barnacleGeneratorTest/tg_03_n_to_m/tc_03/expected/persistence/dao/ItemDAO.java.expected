@@ -1,0 +1,179 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo.ItemVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo.ItemPK;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class ItemDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ItemDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO item (id1, id2, description) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM item WHERE id1 = ? AND id2 = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM item WHERE id1 = ? AND id2 = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE item SET description = ? WHERE id1 = ? AND id2 = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM item";
+	
+	public static void create(ItemVO itemVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ItemDAO.class);
+		try {
+			create(itemVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ItemDAO.class);
+		}
+	}
+	
+	public static void create(ItemVO itemVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, itemVO.getId1());
+		preparedStatement.setString(2, itemVO.getId2());
+		preparedStatement.setString(3, itemVO.getDescription());
+		logger.debug(CREATE_STATEMENT + " [" + itemVO.getId1() + "][" + itemVO.getId2() + "][" + itemVO.getDescription() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<ItemVO> itemVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ItemDAO.class);
+		try {
+			create(itemVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ItemDAO.class);
+		}
+	}
+	
+	public static void create(List<ItemVO> itemVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (ItemVO itemVO : itemVOs) {
+			preparedStatement.setString(1, itemVO.getId1());
+			preparedStatement.setString(2, itemVO.getId2());
+			preparedStatement.setString(3, itemVO.getDescription());
+			logger.debug(CREATE_STATEMENT + " [" + itemVO.getId1() + "][" + itemVO.getId2() + "][" + itemVO.getDescription() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static ItemVO load(ItemPK itemPK) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(ItemDAO.class);
+		try {
+			return load(itemPK, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ItemDAO.class);
+		}
+	}
+	
+	public static ItemVO load(ItemPK itemPK, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, itemPK.getId1());
+		preparedStatement.setString(2, itemPK.getId2());
+		logger.debug(LOAD_STATEMENT + " [" + itemPK.getId1() + "][" + itemPK.getId2() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				ItemVO itemVO = new ItemVO(itemPK);
+				itemVO.setDescription(resultSet.getString("description"));
+				return itemVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'item' with primary key ItemPK = [" + itemPK + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(ItemPK itemPK) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ItemDAO.class);
+		try {
+			delete(itemPK, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ItemDAO.class);
+		}
+	}
+	
+	public static void delete(ItemPK itemPK, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, itemPK.getId1());
+		preparedStatement.setString(2, itemPK.getId2());
+		logger.debug(DELETE_STATEMENT + " [" + itemPK.getId1() + "][" + itemPK.getId2() + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(ItemVO itemVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ItemDAO.class);
+		try {
+			update(itemVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ItemDAO.class);
+		}
+	}
+	
+	public static void update(ItemVO itemVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, itemVO.getDescription());
+		preparedStatement.setString(2, itemVO.getId1());
+		preparedStatement.setString(3, itemVO.getId2());
+		logger.debug(UPDATE_STATEMENT + " [" + itemVO.getDescription() + "][" + itemVO.getId1() + "][" + itemVO.getId2() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<ItemVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ItemDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ItemDAO.class);
+		}
+	}
+	
+	public static List<ItemVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<ItemVO> itemVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id1 = resultSet.getString("id1");
+				String id2 = resultSet.getString("id2");
+				String description = resultSet.getString("description");
+				ItemPK itemPK = new ItemPK(id1, id2);
+				ItemVO itemVO = new ItemVO(itemPK);
+				itemVO.setDescription(description);
+				itemVOs.add(itemVO);
+			}
+			return itemVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

@@ -1,0 +1,72 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_03.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_03.persistence.vof.GarmentVOF;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_03.persistence.dao.PersonDAO;
+import java.util.List;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+
+public class GarmentVO extends GarmentVOF implements Cloneable {
+	
+	public static final String TABLENAME = "garment";
+	public static final String ID = "id";
+	public static final String NAME = "name";
+	
+	public GarmentVO(String id) {
+		this.id=id;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		this.id=id;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name=name;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_02.tc_03.persistence.vo.GarmentVO["
+			+ "id=" + this.id + "; "
+			+ "name=" + this.name
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public List<PersonVO> getPersonVOByFk_person_1() throws DataSourceException {
+		return PersonDAO.findByFk_person_1(this.id);
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		GarmentVO other = (GarmentVO) o;
+		if (this.id == null) {
+			if (other.getId() != null) return false;
+		} else {
+			if (!this.id.equals(other.getId())) return false;
+		}
+		if (this.name == null) {
+			if (other.getName() != null) return false;
+		} else {
+			if (!this.name.equals(other.getName())) return false;
+		}
+		return true;
+	}
+	
+}

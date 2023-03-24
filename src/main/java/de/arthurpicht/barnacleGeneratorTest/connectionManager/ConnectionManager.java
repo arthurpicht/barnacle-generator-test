@@ -1,6 +1,6 @@
 package de.arthurpicht.barnacleGeneratorTest.connectionManager;
 
-import de.arthurpicht.barnacleGeneratorTest.utils.TestUtils;
+import de.arthurpicht.barnacleGeneratorTest.utils.TestIds;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,8 +13,8 @@ public class ConnectionManager {
     static final String PASS = "sa";
 
     public static Connection openConnection(Class<?> aClass) throws DataSourceException {
-        String testGroupId = TestUtils.getTestGroupId(aClass.getCanonicalName());
-        String testCaseId = TestUtils.getTestCaseId(aClass.getCanonicalName());
+        String testGroupId = TestIds.getTestGroupId(aClass.getCanonicalName());
+        String testCaseId = TestIds.getTestCaseId(aClass.getCanonicalName());
         String dbUrl = "jdbc:h2:./db/" + testGroupId + "_" + testCaseId;
         try {
             Class.forName(JDBC_DRIVER);

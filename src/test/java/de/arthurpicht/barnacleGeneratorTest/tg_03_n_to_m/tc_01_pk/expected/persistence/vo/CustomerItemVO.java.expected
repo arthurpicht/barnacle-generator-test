@@ -1,0 +1,71 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vof.CustomerItemVOF;
+
+public class CustomerItemVO extends CustomerItemVOF implements Cloneable {
+	
+	public static final String TABLENAME = "customer_item";
+	public static final String CUSTOMERID = "customerId";
+	public static final String ITEMID = "itemId";
+	
+	public CustomerItemVO(CustomerItemPK customerItemPK) {
+		this.customerId=customerItemPK.getCustomerId();
+		this.itemId=customerItemPK.getItemId();
+	}
+	
+	public CustomerItemPK getPK() {
+		CustomerItemPK customerItemPK = new CustomerItemPK(this.customerId, this.itemId);
+		return customerItemPK;
+	}
+	
+	public String getCustomerId() {
+		return this.customerId;
+	}
+	
+	public void setCustomerId(String customerId) {
+		this.customerId=customerId;
+	}
+	
+	public String getItemId() {
+		return this.itemId;
+	}
+	
+	public void setItemId(String itemId) {
+		this.itemId=itemId;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo.CustomerItemVO["
+			+ "customerId=" + this.customerId + "; "
+			+ "itemId=" + this.itemId
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		CustomerItemVO other = (CustomerItemVO) o;
+		if (this.customerId == null) {
+			if (other.getCustomerId() != null) return false;
+		} else {
+			if (!this.customerId.equals(other.getCustomerId())) return false;
+		}
+		if (this.itemId == null) {
+			if (other.getItemId() != null) return false;
+		} else {
+			if (!this.itemId.equals(other.getItemId())) return false;
+		}
+		return true;
+	}
+	
+}

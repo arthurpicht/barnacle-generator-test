@@ -1,0 +1,187 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_04.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_04.persistence.vo.AutoIncVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class AutoIncDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AutoIncDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO auto_inc (name) VALUES (?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM auto_inc WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM auto_inc WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE auto_inc SET name = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM auto_inc";
+	
+	public static void create(AutoIncVO autoIncVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AutoIncDAO.class);
+		try {
+			create(autoIncVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AutoIncDAO.class);
+		}
+	}
+	
+	public static void create(AutoIncVO autoIncVO, Connection connection) throws SQLException, DataSourceException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT, Statement.RETURN_GENERATED_KEYS);
+		preparedStatement.setString(1, autoIncVO.getName());
+		logger.debug(CREATE_STATEMENT + " [" + autoIncVO.getName() + "]");
+		preparedStatement.executeUpdate();
+		ResultSet resultSet = preparedStatement.getGeneratedKeys();
+		if (resultSet.next()) {
+			int generatedKey = resultSet.getInt(1);
+			autoIncVO.setId(generatedKey);
+		} else {
+			throw new DataSourceException("Could not obtain generated key for auto increment field.");
+		}
+		try { resultSet.close(); } catch (SQLException ignored) {}
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<AutoIncVO> autoIncVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AutoIncDAO.class);
+		try {
+			create(autoIncVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AutoIncDAO.class);
+		}
+	}
+	
+	public static void create(List<AutoIncVO> autoIncVOs, Connection connection) throws SQLException, DataSourceException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT, Statement.RETURN_GENERATED_KEYS);
+		for (AutoIncVO autoIncVO : autoIncVOs) {
+			preparedStatement.setString(1, autoIncVO.getName());
+			logger.debug(CREATE_STATEMENT + " [" + autoIncVO.getName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		ResultSet resultSet = preparedStatement.getGeneratedKeys();
+		for (AutoIncVO autoIncVO : autoIncVOs) {
+			if (resultSet.next()) {
+				int generatedKey = resultSet.getInt(1);
+				autoIncVO.setId(generatedKey);
+			} else {
+				throw new DataSourceException("Could not obtain generated key(s) for auto increment field on batch create.");
+			}
+		}
+		try { resultSet.close(); } catch (SQLException ignored) {}
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static AutoIncVO load(int id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(AutoIncDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AutoIncDAO.class);
+		}
+	}
+	
+	public static AutoIncVO load(int id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setInt(1, id);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				AutoIncVO autoIncVO = new AutoIncVO(id);
+				autoIncVO.setName(resultSet.getString("name"));
+				return autoIncVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'auto_inc' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(int id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AutoIncDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AutoIncDAO.class);
+		}
+	}
+	
+	public static void delete(int id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setInt(1, id);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(AutoIncVO autoIncVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AutoIncDAO.class);
+		try {
+			update(autoIncVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AutoIncDAO.class);
+		}
+	}
+	
+	public static void update(AutoIncVO autoIncVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, autoIncVO.getName());
+		preparedStatement.setInt(2, autoIncVO.getId());
+		logger.debug(UPDATE_STATEMENT + " [" + autoIncVO.getName() + "][" + autoIncVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<AutoIncVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(AutoIncDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, AutoIncDAO.class);
+		}
+	}
+	
+	public static List<AutoIncVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<AutoIncVO> autoIncVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				AutoIncVO autoIncVO = new AutoIncVO(id);
+				autoIncVO.setName(name);
+				autoIncVOs.add(autoIncVO);
+			}
+			return autoIncVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

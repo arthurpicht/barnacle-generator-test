@@ -1,0 +1,179 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vo.GarmentCompositeVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_04.persistence.vo.GarmentCompositePK;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class GarmentCompositeDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GarmentCompositeDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO garment_composite (id1, id2, name) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM garment_composite WHERE id1 = ? AND id2 = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM garment_composite WHERE id1 = ? AND id2 = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE garment_composite SET name = ? WHERE id1 = ? AND id2 = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM garment_composite";
+	
+	public static void create(GarmentCompositeVO garmentCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentCompositeDAO.class);
+		try {
+			create(garmentCompositeVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentCompositeDAO.class);
+		}
+	}
+	
+	public static void create(GarmentCompositeVO garmentCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, garmentCompositeVO.getId1());
+		preparedStatement.setString(2, garmentCompositeVO.getId2());
+		preparedStatement.setString(3, garmentCompositeVO.getName());
+		logger.debug(CREATE_STATEMENT + " [" + garmentCompositeVO.getId1() + "][" + garmentCompositeVO.getId2() + "][" + garmentCompositeVO.getName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<GarmentCompositeVO> garmentCompositeVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentCompositeDAO.class);
+		try {
+			create(garmentCompositeVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentCompositeDAO.class);
+		}
+	}
+	
+	public static void create(List<GarmentCompositeVO> garmentCompositeVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (GarmentCompositeVO garmentCompositeVO : garmentCompositeVOs) {
+			preparedStatement.setString(1, garmentCompositeVO.getId1());
+			preparedStatement.setString(2, garmentCompositeVO.getId2());
+			preparedStatement.setString(3, garmentCompositeVO.getName());
+			logger.debug(CREATE_STATEMENT + " [" + garmentCompositeVO.getId1() + "][" + garmentCompositeVO.getId2() + "][" + garmentCompositeVO.getName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static GarmentCompositeVO load(GarmentCompositePK garmentCompositePK) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(GarmentCompositeDAO.class);
+		try {
+			return load(garmentCompositePK, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentCompositeDAO.class);
+		}
+	}
+	
+	public static GarmentCompositeVO load(GarmentCompositePK garmentCompositePK, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, garmentCompositePK.getId1());
+		preparedStatement.setString(2, garmentCompositePK.getId2());
+		logger.debug(LOAD_STATEMENT + " [" + garmentCompositePK.getId1() + "][" + garmentCompositePK.getId2() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				GarmentCompositeVO garmentCompositeVO = new GarmentCompositeVO(garmentCompositePK);
+				garmentCompositeVO.setName(resultSet.getString("name"));
+				return garmentCompositeVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'garment_composite' with primary key GarmentCompositePK = [" + garmentCompositePK + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(GarmentCompositePK garmentCompositePK) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentCompositeDAO.class);
+		try {
+			delete(garmentCompositePK, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentCompositeDAO.class);
+		}
+	}
+	
+	public static void delete(GarmentCompositePK garmentCompositePK, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, garmentCompositePK.getId1());
+		preparedStatement.setString(2, garmentCompositePK.getId2());
+		logger.debug(DELETE_STATEMENT + " [" + garmentCompositePK.getId1() + "][" + garmentCompositePK.getId2() + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(GarmentCompositeVO garmentCompositeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentCompositeDAO.class);
+		try {
+			update(garmentCompositeVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentCompositeDAO.class);
+		}
+	}
+	
+	public static void update(GarmentCompositeVO garmentCompositeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, garmentCompositeVO.getName());
+		preparedStatement.setString(2, garmentCompositeVO.getId1());
+		preparedStatement.setString(3, garmentCompositeVO.getId2());
+		logger.debug(UPDATE_STATEMENT + " [" + garmentCompositeVO.getName() + "][" + garmentCompositeVO.getId1() + "][" + garmentCompositeVO.getId2() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<GarmentCompositeVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(GarmentCompositeDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, GarmentCompositeDAO.class);
+		}
+	}
+	
+	public static List<GarmentCompositeVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<GarmentCompositeVO> garmentCompositeVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id1 = resultSet.getString("id1");
+				String id2 = resultSet.getString("id2");
+				String name = resultSet.getString("name");
+				GarmentCompositePK garmentCompositePK = new GarmentCompositePK(id1, id2);
+				GarmentCompositeVO garmentCompositeVO = new GarmentCompositeVO(garmentCompositePK);
+				garmentCompositeVO.setName(name);
+				garmentCompositeVOs.add(garmentCompositeVO);
+			}
+			return garmentCompositeVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

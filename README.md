@@ -32,6 +32,12 @@ See repo [barnacle-runtime-test](https://github.com/arthurpicht/barnacle-runtime
 
 Execution of test cases causes DAOs, VOs and database schema (H2 dialect) to be generated.
 
-Currently, only schema generation is tested against specified expectations. 
+* Schema generation is tested against specified expectations.
+* Generated VOs and DAOs are tested against expected code
 
-Execution all tests successfully is a precondition for executing tests included in project [barnacle-runtime-test](https://github.com/arthurpicht/barnacle-runtime-test). 
+Execution all tests successfully is a precondition for executing tests included in project [barnacle-runtime-test](https://github.com/arthurpicht/barnacle-runtime-test).
+
+## Updating expected results
+
+After changing barnacle and its generated code intentionally, expected results for VOs and DAOs can be updated using
+the utility class *CopyExpected*, which copies current generator results to expected code files.

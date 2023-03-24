@@ -1,0 +1,311 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo.CustomerItemVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo.CustomerItemPK;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo.ItemVO;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo.CustomerVO;
+
+public class CustomerItemDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(CustomerItemDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO customer_item (customerId, itemId) VALUES (?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM customer_item WHERE customerId = ? AND itemId = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM customer_item WHERE customerId = ? AND itemId = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE customer_item SET  WHERE customerId = ? AND itemId = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM customer_item";
+	private static final String FK_CUSTOMER_STATEMENT = "SELECT * FROM customer_item WHERE customerId = ?";
+	private static final String FK_ITEM_STATEMENT = "SELECT * FROM customer_item WHERE itemId = ?";
+	private static final String ASSOC_ITEM_STATEMENT = "SELECT t.id, t.description FROM item AS t, customer_item AS a WHERE a.itemId = t.id AND customerId = ?";
+	private static final String ASSOC_CUSTOMER_STATEMENT = "SELECT t.id, t.name FROM customer AS t, customer_item AS a WHERE a.customerId = t.id AND itemId = ?";
+	
+	public static void create(CustomerItemVO customerItemVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			create(customerItemVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static void create(CustomerItemVO customerItemVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, customerItemVO.getCustomerId());
+		preparedStatement.setString(2, customerItemVO.getItemId());
+		logger.debug(CREATE_STATEMENT + " [" + customerItemVO.getCustomerId() + "][" + customerItemVO.getItemId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<CustomerItemVO> customerItemVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			create(customerItemVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static void create(List<CustomerItemVO> customerItemVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (CustomerItemVO customerItemVO : customerItemVOs) {
+			preparedStatement.setString(1, customerItemVO.getCustomerId());
+			preparedStatement.setString(2, customerItemVO.getItemId());
+			logger.debug(CREATE_STATEMENT + " [" + customerItemVO.getCustomerId() + "][" + customerItemVO.getItemId() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static CustomerItemVO load(CustomerItemPK customerItemPK) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			return load(customerItemPK, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static CustomerItemVO load(CustomerItemPK customerItemPK, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, customerItemPK.getCustomerId());
+		preparedStatement.setString(2, customerItemPK.getItemId());
+		logger.debug(LOAD_STATEMENT + " [" + customerItemPK.getCustomerId() + "][" + customerItemPK.getItemId() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
+				return customerItemVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'customer_item' with primary key CustomerItemPK = [" + customerItemPK + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(CustomerItemPK customerItemPK) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			delete(customerItemPK, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static void delete(CustomerItemPK customerItemPK, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, customerItemPK.getCustomerId());
+		preparedStatement.setString(2, customerItemPK.getItemId());
+		logger.debug(DELETE_STATEMENT + " [" + customerItemPK.getCustomerId() + "][" + customerItemPK.getItemId() + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(CustomerItemVO customerItemVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			update(customerItemVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static void update(CustomerItemVO customerItemVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setString(1, customerItemVO.getCustomerId());
+		preparedStatement.setString(2, customerItemVO.getItemId());
+		logger.debug(UPDATE_STATEMENT + " [" + customerItemVO.getCustomerId() + "][" + customerItemVO.getItemId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<CustomerItemVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static List<CustomerItemVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<CustomerItemVO> customerItemVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String customerId = resultSet.getString("customerId");
+				String itemId = resultSet.getString("itemId");
+				CustomerItemPK customerItemPK = new CustomerItemPK(customerId, itemId);
+				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
+				customerItemVOs.add(customerItemVO);
+			}
+			return customerItemVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static List<CustomerItemVO> findByFk_customer(String customerId) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			return findByFk_customer(customerId, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static List<CustomerItemVO> findByFk_customer(String customerId, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(FK_CUSTOMER_STATEMENT);
+		preparedStatement.setString(1, customerId);
+		logger.debug(FK_CUSTOMER_STATEMENT + " [" + customerId + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		List<CustomerItemVO> customerItemVOList = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String itemId = resultSet.getString("itemId");
+				CustomerItemPK customerItemPK = new CustomerItemPK(customerId, itemId);
+				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
+				customerItemVOList.add(customerItemVO);
+			}
+			return customerItemVOList;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static List<CustomerItemVO> findByFk_item(String itemId) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			return findByFk_item(itemId, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static List<CustomerItemVO> findByFk_item(String itemId, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(FK_ITEM_STATEMENT);
+		preparedStatement.setString(1, itemId);
+		logger.debug(FK_ITEM_STATEMENT + " [" + itemId + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		List<CustomerItemVO> customerItemVOList = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String customerId = resultSet.getString("customerId");
+				CustomerItemPK customerItemPK = new CustomerItemPK(customerId, itemId);
+				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
+				customerItemVOList.add(customerItemVO);
+			}
+			return customerItemVOList;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static List<ItemVO> getAssociatedItemVO(CustomerVO customerVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			return getAssociatedItemVO(customerVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static List<ItemVO> getAssociatedItemVO(CustomerVO customerVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(ASSOC_ITEM_STATEMENT);
+		preparedStatement.setString(1, customerVO.getId());
+		logger.debug(ASSOC_ITEM_STATEMENT + " [" + customerVO.getId() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		List<ItemVO> itemVOList = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String description = resultSet.getString("description");
+				ItemVO itemVO = new ItemVO(id);
+				itemVO.setDescription(description);
+				itemVOList.add(itemVO);
+			}
+			return itemVOList;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static List<CustomerVO> getAssociatedCustomerVO(ItemVO itemVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(CustomerItemDAO.class);
+		try {
+			return getAssociatedCustomerVO(itemVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, CustomerItemDAO.class);
+		}
+	}
+	
+	public static List<CustomerVO> getAssociatedCustomerVO(ItemVO itemVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(ASSOC_CUSTOMER_STATEMENT);
+		preparedStatement.setString(1, itemVO.getId());
+		logger.debug(ASSOC_CUSTOMER_STATEMENT + " [" + itemVO.getId() + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		List<CustomerVO> customerVOList = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				String name = resultSet.getString("name");
+				CustomerVO customerVO = new CustomerVO(id);
+				customerVO.setName(name);
+				customerVOList.add(customerVO);
+			}
+			return customerVOList;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void addAssociation(CustomerVO customerVO, ItemVO itemVO) throws DataSourceException {
+		CustomerItemPK customerItemPK = new CustomerItemPK(customerVO.getId(), itemVO.getId());
+		CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
+		CustomerItemDAO.create(customerItemVO);
+	}
+	
+}

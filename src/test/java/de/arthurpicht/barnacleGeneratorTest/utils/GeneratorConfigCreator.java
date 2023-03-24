@@ -7,8 +7,8 @@ import de.arthurpicht.barnacle.configuration.generator.GeneratorConfigurationBui
 public class GeneratorConfigCreator {
 
     public static GeneratorConfiguration create(Object testCase) {
-        String testGroupId = TestUtils.getTestGroupId(testCase);
-        String testCaseId = TestUtils.getTestCaseId(testCase);
+        String testGroupId = TestIds.getTestGroupId(testCase);
+        String testCaseId = TestIds.getTestCaseId(testCase);
 
         GeneratorConfigurationBuilder generatorConfigurationBuilder = new GeneratorConfigurationBuilder(
                 "de.arthurpicht.barnacleGeneratorTest." + testGroupId + "." + testCaseId + ".persistence.vof",

@@ -1,0 +1,72 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vof.ItemVOF;
+import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.dao.CustomerItemDAO;
+import java.util.List;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+
+public class ItemVO extends ItemVOF implements Cloneable {
+	
+	public static final String TABLENAME = "item";
+	public static final String ID = "id";
+	public static final String DESCRIPTION = "description";
+	
+	public ItemVO(String id) {
+		this.id=id;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		this.id=id;
+	}
+	
+	public String getDescription() {
+		return this.description;
+	}
+	
+	public void setDescription(String description) {
+		this.description=description;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vo.ItemVO["
+			+ "id=" + this.id + "; "
+			+ "description=" + this.description
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public List<CustomerItemVO> getCustomerItemVOByFk_item() throws DataSourceException {
+		return CustomerItemDAO.findByFk_item(this.id);
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		ItemVO other = (ItemVO) o;
+		if (this.id == null) {
+			if (other.getId() != null) return false;
+		} else {
+			if (!this.id.equals(other.getId())) return false;
+		}
+		if (this.description == null) {
+			if (other.getDescription() != null) return false;
+		} else {
+			if (!this.description.equals(other.getDescription())) return false;
+		}
+		return true;
+	}
+	
+}

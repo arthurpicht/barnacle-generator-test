@@ -1,8 +1,8 @@
-package de.arthurpicht.barnacleGeneratorTest.utils;
+package de.arthurpicht.barnacleGeneratorTest.utils.prepareExpected;
 
 import java.util.Objects;
 
-public class TestCaseIds {
+public class TestCaseIds implements Comparable {
 
     private final String testGroupId;
     private final String testCaseId;
@@ -33,4 +33,13 @@ public class TestCaseIds {
         return Objects.hash(testGroupId, testCaseId);
     }
 
+    @Override
+    public String toString() {
+        return "testGroupId: [" + this.getTestGroupId() + "][" + this.getTestCaseId() + "].";
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.toString().compareTo(o.toString());
+    }
 }

@@ -1,0 +1,65 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_01.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_01.persistence.vof.AddressVOF;
+
+public class AddressVO extends AddressVOF implements Cloneable {
+	
+	public static final String TABLENAME = "address";
+	public static final String USERID = "userId";
+	public static final String EMAIL = "email";
+	
+	public AddressVO(String userId) {
+		this.userId=userId;
+	}
+	
+	public String getUserId() {
+		return this.userId;
+	}
+	
+	public void setUserId(String userId) {
+		this.userId=userId;
+	}
+	
+	public String getEmail() {
+		return this.email;
+	}
+	
+	public void setEmail(String email) {
+		this.email=email;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_02.tc_01.persistence.vo.AddressVO["
+			+ "userId=" + this.userId + "; "
+			+ "email=" + this.email
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		AddressVO other = (AddressVO) o;
+		if (this.userId == null) {
+			if (other.getUserId() != null) return false;
+		} else {
+			if (!this.userId.equals(other.getUserId())) return false;
+		}
+		if (this.email == null) {
+			if (other.getEmail() != null) return false;
+		} else {
+			if (!this.email.equals(other.getEmail())) return false;
+		}
+		return true;
+	}
+	
+}

@@ -1,0 +1,57 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vof.PersonCompositeVOF;
+
+public class PersonCompositePK extends PersonCompositeVOF {
+	
+	public static final String FIRSTNAME = "first_name";
+	public static final String LASTNAME = "last_name";
+	
+	public PersonCompositePK(String firstName, String lastName) {
+		this.firstName=firstName;
+		this.lastName=lastName;
+	}
+	
+	public String getFirstName() {
+		return this.firstName;
+	}
+	
+	public void setFirstName(String firstName) {
+		this.firstName=firstName;
+	}
+	
+	public String getLastName() {
+		return this.lastName;
+	}
+	
+	public void setLastName(String lastName) {
+		this.lastName=lastName;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vo.PersonCompositePK["
+			+ "firstName=" + this.firstName + "; "
+			+ "lastName=" + this.lastName
+			+ "]";
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		PersonCompositePK other = (PersonCompositePK) o;
+		if (this.firstName == null) {
+			if (other.getFirstName() != null) return false;
+		} else {
+			if (!this.firstName.equals(other.getFirstName())) return false;
+		}
+		if (this.lastName == null) {
+			if (other.getLastName() != null) return false;
+		} else {
+			if (!this.lastName.equals(other.getLastName())) return false;
+		}
+		return true;
+	}
+	
+}

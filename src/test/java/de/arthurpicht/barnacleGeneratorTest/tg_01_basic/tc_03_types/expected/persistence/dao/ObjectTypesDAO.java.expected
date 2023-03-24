@@ -1,0 +1,207 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.vo.ObjectTypesVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class ObjectTypesDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ObjectTypesDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO object_types (id, my_boolean, my_int, my_long, my_float, my_double, my_byte, my_short) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM object_types WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM object_types WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE object_types SET my_boolean = ?, my_int = ?, my_long = ?, my_float = ?, my_double = ?, my_byte = ?, my_short = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM object_types";
+	
+	public static void create(ObjectTypesVO objectTypesVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ObjectTypesDAO.class);
+		try {
+			create(objectTypesVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ObjectTypesDAO.class);
+		}
+	}
+	
+	public static void create(ObjectTypesVO objectTypesVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setString(1, objectTypesVO.getId());
+		preparedStatement.setBoolean(2, objectTypesVO.getMyBoolean());
+		preparedStatement.setInt(3, objectTypesVO.getMyInt());
+		preparedStatement.setLong(4, objectTypesVO.getMyLong());
+		preparedStatement.setFloat(5, objectTypesVO.getMyFloat());
+		preparedStatement.setDouble(6, objectTypesVO.getMyDouble());
+		preparedStatement.setByte(7, objectTypesVO.getMyByte());
+		preparedStatement.setShort(8, objectTypesVO.getMyShort());
+		logger.debug(CREATE_STATEMENT + " [" + objectTypesVO.getId() + "][" + objectTypesVO.getMyBoolean() + "][" + objectTypesVO.getMyInt() + "][" + objectTypesVO.getMyLong() + "][" + objectTypesVO.getMyFloat() + "][" + objectTypesVO.getMyDouble() + "][" + objectTypesVO.getMyByte() + "][" + objectTypesVO.getMyShort() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<ObjectTypesVO> objectTypesVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ObjectTypesDAO.class);
+		try {
+			create(objectTypesVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ObjectTypesDAO.class);
+		}
+	}
+	
+	public static void create(List<ObjectTypesVO> objectTypesVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (ObjectTypesVO objectTypesVO : objectTypesVOs) {
+			preparedStatement.setString(1, objectTypesVO.getId());
+			preparedStatement.setBoolean(2, objectTypesVO.getMyBoolean());
+			preparedStatement.setInt(3, objectTypesVO.getMyInt());
+			preparedStatement.setLong(4, objectTypesVO.getMyLong());
+			preparedStatement.setFloat(5, objectTypesVO.getMyFloat());
+			preparedStatement.setDouble(6, objectTypesVO.getMyDouble());
+			preparedStatement.setByte(7, objectTypesVO.getMyByte());
+			preparedStatement.setShort(8, objectTypesVO.getMyShort());
+			logger.debug(CREATE_STATEMENT + " [" + objectTypesVO.getId() + "][" + objectTypesVO.getMyBoolean() + "][" + objectTypesVO.getMyInt() + "][" + objectTypesVO.getMyLong() + "][" + objectTypesVO.getMyFloat() + "][" + objectTypesVO.getMyDouble() + "][" + objectTypesVO.getMyByte() + "][" + objectTypesVO.getMyShort() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static ObjectTypesVO load(String id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(ObjectTypesDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ObjectTypesDAO.class);
+		}
+	}
+	
+	public static ObjectTypesVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				ObjectTypesVO objectTypesVO = new ObjectTypesVO(id);
+				objectTypesVO.setMyBoolean(resultSet.getBoolean("my_boolean"));
+				objectTypesVO.setMyInt(resultSet.getInt("my_int"));
+				objectTypesVO.setMyLong(resultSet.getLong("my_long"));
+				objectTypesVO.setMyFloat(resultSet.getFloat("my_float"));
+				objectTypesVO.setMyDouble(resultSet.getDouble("my_double"));
+				objectTypesVO.setMyByte(resultSet.getByte("my_byte"));
+				objectTypesVO.setMyShort(resultSet.getShort("my_short"));
+				return objectTypesVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'object_types' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(String id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ObjectTypesDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ObjectTypesDAO.class);
+		}
+	}
+	
+	public static void delete(String id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setString(1, id);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(ObjectTypesVO objectTypesVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ObjectTypesDAO.class);
+		try {
+			update(objectTypesVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ObjectTypesDAO.class);
+		}
+	}
+	
+	public static void update(ObjectTypesVO objectTypesVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setBoolean(1, objectTypesVO.getMyBoolean());
+		preparedStatement.setInt(2, objectTypesVO.getMyInt());
+		preparedStatement.setLong(3, objectTypesVO.getMyLong());
+		preparedStatement.setFloat(4, objectTypesVO.getMyFloat());
+		preparedStatement.setDouble(5, objectTypesVO.getMyDouble());
+		preparedStatement.setByte(6, objectTypesVO.getMyByte());
+		preparedStatement.setShort(7, objectTypesVO.getMyShort());
+		preparedStatement.setString(8, objectTypesVO.getId());
+		logger.debug(UPDATE_STATEMENT + " [" + objectTypesVO.getMyBoolean() + "][" + objectTypesVO.getMyInt() + "][" + objectTypesVO.getMyLong() + "][" + objectTypesVO.getMyFloat() + "][" + objectTypesVO.getMyDouble() + "][" + objectTypesVO.getMyByte() + "][" + objectTypesVO.getMyShort() + "][" + objectTypesVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<ObjectTypesVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(ObjectTypesDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, ObjectTypesDAO.class);
+		}
+	}
+	
+	public static List<ObjectTypesVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<ObjectTypesVO> objectTypesVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getString("id");
+				Boolean myBoolean = resultSet.getBoolean("my_boolean");
+				Integer myInt = resultSet.getInt("my_int");
+				Long myLong = resultSet.getLong("my_long");
+				Float myFloat = resultSet.getFloat("my_float");
+				Double myDouble = resultSet.getDouble("my_double");
+				Byte myByte = resultSet.getByte("my_byte");
+				Short myShort = resultSet.getShort("my_short");
+				ObjectTypesVO objectTypesVO = new ObjectTypesVO(id);
+				objectTypesVO.setMyBoolean(myBoolean);
+				objectTypesVO.setMyInt(myInt);
+				objectTypesVO.setMyLong(myLong);
+				objectTypesVO.setMyFloat(myFloat);
+				objectTypesVO.setMyDouble(myDouble);
+				objectTypesVO.setMyByte(myByte);
+				objectTypesVO.setMyShort(myShort);
+				objectTypesVOs.add(objectTypesVO);
+			}
+			return objectTypesVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

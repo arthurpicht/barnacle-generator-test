@@ -1,6 +1,6 @@
 package de.arthurpicht.barnacleGeneratorTest.utils.prepareExpected;
 
-import de.arthurpicht.barnacleGeneratorTest.utils.TestIds;
+import de.arthurpicht.utils.test.TestIds;
 import de.arthurpicht.utils.io.nio2.FileUtils;
 
 import java.io.IOException;

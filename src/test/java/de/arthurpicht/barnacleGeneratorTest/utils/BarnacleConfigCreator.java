@@ -1,12 +1,24 @@
 package de.arthurpicht.barnacleGeneratorTest.utils;
 
 import de.arthurpicht.barnacle.Const;
+import de.arthurpicht.barnacle.configuration.BarnacleConfiguration;
+import de.arthurpicht.barnacle.configuration.db.DbConnectionConfiguration;
 import de.arthurpicht.barnacle.configuration.generator.GeneratorConfiguration;
 import de.arthurpicht.barnacle.configuration.generator.GeneratorConfigurationBuilder;
+import de.arthurpicht.utils.test.TestIds;
 
-public class GeneratorConfigCreator {
+import java.util.ArrayList;
+import java.util.List;
 
-    public static GeneratorConfiguration create(Object testCase) {
+public class BarnacleConfigCreator {
+
+    public static BarnacleConfiguration create(Object testCase) {
+        GeneratorConfiguration generatorConfiguration = createGeneratorConfiguration(testCase);
+        List<DbConnectionConfiguration> dbConnectionConfigurationList = new ArrayList<>();
+        return new BarnacleConfiguration(generatorConfiguration, dbConnectionConfigurationList);
+    }
+
+    private static GeneratorConfiguration createGeneratorConfiguration(Object testCase) {
         String testGroupId = TestIds.getTestGroupId(testCase);
         String testCaseId = TestIds.getTestCaseId(testCase);
 

@@ -1,10 +1,13 @@
 package de.arthurpicht.barnacleGeneratorTest;
 
-import de.arthurpicht.barnacle.configuration.generator.GeneratorConfiguration;
-import de.arthurpicht.barnacle.context.GeneratorContext;
+import de.arthurpicht.barnacle.configuration.BarnacleConfiguration;
 import de.arthurpicht.barnacle.generator.BarnacleGenerator;
-import de.arthurpicht.barnacleGeneratorTest.utils.*;
-import de.arthurpicht.barnacleGeneratorTest.utils.FilesCompare.FilePair;
+import de.arthurpicht.barnacleGeneratorTest.utils.BarnacleConfigCreator;
+import de.arthurpicht.barnacleGeneratorTest.utils.CleanUp;
+import de.arthurpicht.barnacleGeneratorTest.utils.Prepare;
+import de.arthurpicht.barnacleGeneratorTest.utils.TestPaths;
+import de.arthurpicht.utils.test.*;
+import de.arthurpicht.utils.test.FilesCompare.FilePair;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -19,7 +22,6 @@ public abstract class BaseTestCase {
 
     @BeforeAll
     public void prepare() throws IOException {
-        GeneratorContext.invalidate();
         CleanUp.cleanUp(this);
         Prepare.prepare(this);
     }
@@ -33,8 +35,8 @@ public abstract class BaseTestCase {
     @Test
     @Order(1)
     public void generate() {
-        GeneratorConfiguration generatorConfiguration = GeneratorConfigCreator.create(this);
-        BarnacleGenerator.process(generatorConfiguration);
+        BarnacleConfiguration barnacleConfiguration = BarnacleConfigCreator.create(this);
+        BarnacleGenerator.process(barnacleConfiguration);
     }
 
     @Test

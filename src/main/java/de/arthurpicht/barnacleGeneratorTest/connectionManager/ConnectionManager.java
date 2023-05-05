@@ -1,6 +1,6 @@
 package de.arthurpicht.barnacleGeneratorTest.connectionManager;
 
-import de.arthurpicht.barnacleGeneratorTest.utils.TestIds;
+import de.arthurpicht.utils.test.TestIds;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

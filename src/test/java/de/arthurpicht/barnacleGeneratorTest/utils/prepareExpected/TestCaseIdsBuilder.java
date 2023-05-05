@@ -1,7 +1,6 @@
 package de.arthurpicht.barnacleGeneratorTest.utils.prepareExpected;
 
-import de.arthurpicht.barnacleGeneratorTest.utils.TestIds;
-
+import de.arthurpicht.utils.test.TestIds;
 import java.nio.file.Path;
 
 public class TestCaseIdsBuilder {

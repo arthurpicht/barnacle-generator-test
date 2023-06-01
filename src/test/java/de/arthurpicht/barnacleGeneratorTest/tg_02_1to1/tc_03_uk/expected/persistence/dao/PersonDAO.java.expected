@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_03.persistence.vo.PersonVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -40,9 +41,9 @@ public class PersonDAO {
 	
 	public static void create(PersonVO personVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, personVO.getId());
-		preparedStatement.setString(2, personVO.getUserName());
-		preparedStatement.setString(3, personVO.getFavoriteGarmentId());
+		preparedStatement.setObject(1, personVO.getId(), Types.VARCHAR);
+		preparedStatement.setObject(2, personVO.getUserName(), Types.VARCHAR);
+		preparedStatement.setObject(3, personVO.getFavoriteGarmentId(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + personVO.getId() + "][" + personVO.getUserName() + "][" + personVO.getFavoriteGarmentId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -62,9 +63,9 @@ public class PersonDAO {
 	public static void create(List<PersonVO> personVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (PersonVO personVO : personVOs) {
-			preparedStatement.setString(1, personVO.getId());
-			preparedStatement.setString(2, personVO.getUserName());
-			preparedStatement.setString(3, personVO.getFavoriteGarmentId());
+			preparedStatement.setObject(1, personVO.getId(), Types.VARCHAR);
+			preparedStatement.setObject(2, personVO.getUserName(), Types.VARCHAR);
+			preparedStatement.setObject(3, personVO.getFavoriteGarmentId(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + personVO.getId() + "][" + personVO.getUserName() + "][" + personVO.getFavoriteGarmentId() + "]");
 			preparedStatement.addBatch();
 		}
@@ -85,14 +86,14 @@ public class PersonDAO {
 	
 	public static PersonVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + id + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
 				PersonVO personVO = new PersonVO(id);
-				personVO.setUserName(resultSet.getString("userName"));
-				personVO.setFavoriteGarmentId(resultSet.getString("favoriteGarmentId"));
+				personVO.setUserName(resultSet.getObject("userName", String.class));
+				personVO.setFavoriteGarmentId(resultSet.getObject("favoriteGarmentId", String.class));
 				return personVO;
 			} else {
 				throw new EntityNotFoundException("Entity 'person' with primary key field 'id' = [" + id + "] not found!");
@@ -116,7 +117,7 @@ public class PersonDAO {
 	
 	public static void delete(String id, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + id + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -135,9 +136,9 @@ public class PersonDAO {
 	
 	public static void update(PersonVO personVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, personVO.getUserName());
-		preparedStatement.setString(2, personVO.getFavoriteGarmentId());
-		preparedStatement.setString(3, personVO.getId());
+		preparedStatement.setObject(1, personVO.getUserName(), Types.VARCHAR);
+		preparedStatement.setObject(2, personVO.getFavoriteGarmentId(), Types.VARCHAR);
+		preparedStatement.setObject(3, personVO.getId(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + personVO.getUserName() + "][" + personVO.getFavoriteGarmentId() + "][" + personVO.getId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -161,9 +162,9 @@ public class PersonDAO {
 		List<PersonVO> personVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String userName = resultSet.getString("userName");
-				String favoriteGarmentId = resultSet.getString("favoriteGarmentId");
+				String id = resultSet.getObject("id", String.class);
+				String userName = resultSet.getObject("userName", String.class);
+				String favoriteGarmentId = resultSet.getObject("favoriteGarmentId", String.class);
 				PersonVO personVO = new PersonVO(id);
 				personVO.setUserName(userName);
 				personVO.setFavoriteGarmentId(favoriteGarmentId);
@@ -189,14 +190,14 @@ public class PersonDAO {
 	
 	public static List<PersonVO> findByFk_person_1(String favoriteGarmentId, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(FK_PERSON_1_STATEMENT);
-		preparedStatement.setString(1, favoriteGarmentId);
+		preparedStatement.setObject(1, favoriteGarmentId, Types.VARCHAR);
 		logger.debug(FK_PERSON_1_STATEMENT + " [" + favoriteGarmentId + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<PersonVO> personVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String userName = resultSet.getString("userName");
+				String id = resultSet.getObject("id", String.class);
+				String userName = resultSet.getObject("userName", String.class);
 				PersonVO personVO = new PersonVO(id);
 				personVO.setUserName(userName);
 				personVO.setFavoriteGarmentId(favoriteGarmentId);
@@ -222,13 +223,13 @@ public class PersonDAO {
 	
 	public static PersonVO findByUk_favoriteGarmentId(String favoriteGarmentId, Connection connection) throws EntityNotFoundException, SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UK_FAVORITEGARMENTID_STATEMENT);
-		preparedStatement.setString(1, favoriteGarmentId);
+		preparedStatement.setObject(1, favoriteGarmentId, Types.VARCHAR);
 		logger.debug(UK_FAVORITEGARMENTID_STATEMENT + " [" + favoriteGarmentId + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String userName = resultSet.getString("userName");
+				String id = resultSet.getObject("id", String.class);
+				String userName = resultSet.getObject("userName", String.class);
 				PersonVO personVO = new PersonVO(id);
 				personVO.setUserName(userName);
 				personVO.setFavoriteGarmentId(favoriteGarmentId);

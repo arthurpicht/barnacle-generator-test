@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo.UserCompositeVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -39,9 +40,9 @@ public class UserCompositeDAO {
 	
 	public static void create(UserCompositeVO userCompositeVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, userCompositeVO.getId1());
-		preparedStatement.setString(2, userCompositeVO.getId2());
-		preparedStatement.setString(3, userCompositeVO.getUserName());
+		preparedStatement.setObject(1, userCompositeVO.getId1(), Types.VARCHAR);
+		preparedStatement.setObject(2, userCompositeVO.getId2(), Types.VARCHAR);
+		preparedStatement.setObject(3, userCompositeVO.getUserName(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + userCompositeVO.getId1() + "][" + userCompositeVO.getId2() + "][" + userCompositeVO.getUserName() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -61,9 +62,9 @@ public class UserCompositeDAO {
 	public static void create(List<UserCompositeVO> userCompositeVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (UserCompositeVO userCompositeVO : userCompositeVOs) {
-			preparedStatement.setString(1, userCompositeVO.getId1());
-			preparedStatement.setString(2, userCompositeVO.getId2());
-			preparedStatement.setString(3, userCompositeVO.getUserName());
+			preparedStatement.setObject(1, userCompositeVO.getId1(), Types.VARCHAR);
+			preparedStatement.setObject(2, userCompositeVO.getId2(), Types.VARCHAR);
+			preparedStatement.setObject(3, userCompositeVO.getUserName(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + userCompositeVO.getId1() + "][" + userCompositeVO.getId2() + "][" + userCompositeVO.getUserName() + "]");
 			preparedStatement.addBatch();
 		}
@@ -84,14 +85,14 @@ public class UserCompositeDAO {
 	
 	public static UserCompositeVO load(UserCompositePK userCompositePK, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, userCompositePK.getId1());
-		preparedStatement.setString(2, userCompositePK.getId2());
+		preparedStatement.setObject(1, userCompositePK.getId1(), Types.VARCHAR);
+		preparedStatement.setObject(2, userCompositePK.getId2(), Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + userCompositePK.getId1() + "][" + userCompositePK.getId2() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
 				UserCompositeVO userCompositeVO = new UserCompositeVO(userCompositePK);
-				userCompositeVO.setUserName(resultSet.getString("userName"));
+				userCompositeVO.setUserName(resultSet.getObject("userName", String.class));
 				return userCompositeVO;
 			} else {
 				throw new EntityNotFoundException("Entity 'user_composite' with primary key UserCompositePK = [" + userCompositePK + "] not found!");
@@ -115,8 +116,8 @@ public class UserCompositeDAO {
 	
 	public static void delete(UserCompositePK userCompositePK, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, userCompositePK.getId1());
-		preparedStatement.setString(2, userCompositePK.getId2());
+		preparedStatement.setObject(1, userCompositePK.getId1(), Types.VARCHAR);
+		preparedStatement.setObject(2, userCompositePK.getId2(), Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + userCompositePK.getId1() + "][" + userCompositePK.getId2() + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -135,9 +136,9 @@ public class UserCompositeDAO {
 	
 	public static void update(UserCompositeVO userCompositeVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, userCompositeVO.getUserName());
-		preparedStatement.setString(2, userCompositeVO.getId1());
-		preparedStatement.setString(3, userCompositeVO.getId2());
+		preparedStatement.setObject(1, userCompositeVO.getUserName(), Types.VARCHAR);
+		preparedStatement.setObject(2, userCompositeVO.getId1(), Types.VARCHAR);
+		preparedStatement.setObject(3, userCompositeVO.getId2(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + userCompositeVO.getUserName() + "][" + userCompositeVO.getId1() + "][" + userCompositeVO.getId2() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -161,9 +162,9 @@ public class UserCompositeDAO {
 		List<UserCompositeVO> userCompositeVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id1 = resultSet.getString("id1");
-				String id2 = resultSet.getString("id2");
-				String userName = resultSet.getString("userName");
+				String id1 = resultSet.getObject("id1", String.class);
+				String id2 = resultSet.getObject("id2", String.class);
+				String userName = resultSet.getObject("userName", String.class);
 				UserCompositePK userCompositePK = new UserCompositePK(id1, id2);
 				UserCompositeVO userCompositeVO = new UserCompositeVO(userCompositePK);
 				userCompositeVO.setUserName(userName);

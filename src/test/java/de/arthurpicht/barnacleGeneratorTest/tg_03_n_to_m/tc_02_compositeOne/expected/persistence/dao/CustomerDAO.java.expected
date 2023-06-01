@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_02.persistence.vo.CustomerVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -39,9 +40,9 @@ public class CustomerDAO {
 	
 	public static void create(CustomerVO customerVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, customerVO.getIdPart1());
-		preparedStatement.setString(2, customerVO.getIdPart2());
-		preparedStatement.setString(3, customerVO.getName());
+		preparedStatement.setObject(1, customerVO.getIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerVO.getIdPart2(), Types.VARCHAR);
+		preparedStatement.setObject(3, customerVO.getName(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + customerVO.getIdPart1() + "][" + customerVO.getIdPart2() + "][" + customerVO.getName() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -61,9 +62,9 @@ public class CustomerDAO {
 	public static void create(List<CustomerVO> customerVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (CustomerVO customerVO : customerVOs) {
-			preparedStatement.setString(1, customerVO.getIdPart1());
-			preparedStatement.setString(2, customerVO.getIdPart2());
-			preparedStatement.setString(3, customerVO.getName());
+			preparedStatement.setObject(1, customerVO.getIdPart1(), Types.VARCHAR);
+			preparedStatement.setObject(2, customerVO.getIdPart2(), Types.VARCHAR);
+			preparedStatement.setObject(3, customerVO.getName(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + customerVO.getIdPart1() + "][" + customerVO.getIdPart2() + "][" + customerVO.getName() + "]");
 			preparedStatement.addBatch();
 		}
@@ -84,14 +85,14 @@ public class CustomerDAO {
 	
 	public static CustomerVO load(CustomerPK customerPK, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, customerPK.getIdPart1());
-		preparedStatement.setString(2, customerPK.getIdPart2());
+		preparedStatement.setObject(1, customerPK.getIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerPK.getIdPart2(), Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + customerPK.getIdPart1() + "][" + customerPK.getIdPart2() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
 				CustomerVO customerVO = new CustomerVO(customerPK);
-				customerVO.setName(resultSet.getString("name"));
+				customerVO.setName(resultSet.getObject("name", String.class));
 				return customerVO;
 			} else {
 				throw new EntityNotFoundException("Entity 'customer' with primary key CustomerPK = [" + customerPK + "] not found!");
@@ -115,8 +116,8 @@ public class CustomerDAO {
 	
 	public static void delete(CustomerPK customerPK, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, customerPK.getIdPart1());
-		preparedStatement.setString(2, customerPK.getIdPart2());
+		preparedStatement.setObject(1, customerPK.getIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerPK.getIdPart2(), Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + customerPK.getIdPart1() + "][" + customerPK.getIdPart2() + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -135,9 +136,9 @@ public class CustomerDAO {
 	
 	public static void update(CustomerVO customerVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, customerVO.getName());
-		preparedStatement.setString(2, customerVO.getIdPart1());
-		preparedStatement.setString(3, customerVO.getIdPart2());
+		preparedStatement.setObject(1, customerVO.getName(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerVO.getIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(3, customerVO.getIdPart2(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + customerVO.getName() + "][" + customerVO.getIdPart1() + "][" + customerVO.getIdPart2() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -161,9 +162,9 @@ public class CustomerDAO {
 		List<CustomerVO> customerVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String idPart1 = resultSet.getString("id_part_1");
-				String idPart2 = resultSet.getString("id_part_2");
-				String name = resultSet.getString("name");
+				String idPart1 = resultSet.getObject("id_part_1", String.class);
+				String idPart2 = resultSet.getObject("id_part_2", String.class);
+				String name = resultSet.getObject("name", String.class);
 				CustomerPK customerPK = new CustomerPK(idPart1, idPart2);
 				CustomerVO customerVO = new CustomerVO(customerPK);
 				customerVO.setName(name);

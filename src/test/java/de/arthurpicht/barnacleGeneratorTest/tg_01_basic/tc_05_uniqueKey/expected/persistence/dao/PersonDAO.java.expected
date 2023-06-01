@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_05.persistence.vo.PersonVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -39,9 +40,9 @@ public class PersonDAO {
 	
 	public static void create(PersonVO personVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, personVO.getId());
-		preparedStatement.setString(2, personVO.getUserName());
-		preparedStatement.setString(3, personVO.getFirstName());
+		preparedStatement.setObject(1, personVO.getId(), Types.VARCHAR);
+		preparedStatement.setObject(2, personVO.getUserName(), Types.VARCHAR);
+		preparedStatement.setObject(3, personVO.getFirstName(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + personVO.getId() + "][" + personVO.getUserName() + "][" + personVO.getFirstName() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -61,9 +62,9 @@ public class PersonDAO {
 	public static void create(List<PersonVO> personVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (PersonVO personVO : personVOs) {
-			preparedStatement.setString(1, personVO.getId());
-			preparedStatement.setString(2, personVO.getUserName());
-			preparedStatement.setString(3, personVO.getFirstName());
+			preparedStatement.setObject(1, personVO.getId(), Types.VARCHAR);
+			preparedStatement.setObject(2, personVO.getUserName(), Types.VARCHAR);
+			preparedStatement.setObject(3, personVO.getFirstName(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + personVO.getId() + "][" + personVO.getUserName() + "][" + personVO.getFirstName() + "]");
 			preparedStatement.addBatch();
 		}
@@ -84,14 +85,14 @@ public class PersonDAO {
 	
 	public static PersonVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + id + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
 				PersonVO personVO = new PersonVO(id);
-				personVO.setUserName(resultSet.getString("userName"));
-				personVO.setFirstName(resultSet.getString("firstName"));
+				personVO.setUserName(resultSet.getObject("userName", String.class));
+				personVO.setFirstName(resultSet.getObject("firstName", String.class));
 				return personVO;
 			} else {
 				throw new EntityNotFoundException("Entity 'person' with primary key field 'id' = [" + id + "] not found!");
@@ -115,7 +116,7 @@ public class PersonDAO {
 	
 	public static void delete(String id, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + id + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -134,9 +135,9 @@ public class PersonDAO {
 	
 	public static void update(PersonVO personVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, personVO.getUserName());
-		preparedStatement.setString(2, personVO.getFirstName());
-		preparedStatement.setString(3, personVO.getId());
+		preparedStatement.setObject(1, personVO.getUserName(), Types.VARCHAR);
+		preparedStatement.setObject(2, personVO.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(3, personVO.getId(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + personVO.getUserName() + "][" + personVO.getFirstName() + "][" + personVO.getId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -160,9 +161,9 @@ public class PersonDAO {
 		List<PersonVO> personVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String userName = resultSet.getString("userName");
-				String firstName = resultSet.getString("firstName");
+				String id = resultSet.getObject("id", String.class);
+				String userName = resultSet.getObject("userName", String.class);
+				String firstName = resultSet.getObject("firstName", String.class);
 				PersonVO personVO = new PersonVO(id);
 				personVO.setUserName(userName);
 				personVO.setFirstName(firstName);
@@ -188,13 +189,13 @@ public class PersonDAO {
 	
 	public static PersonVO findByUk_userName(String userName, Connection connection) throws EntityNotFoundException, SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UK_USERNAME_STATEMENT);
-		preparedStatement.setString(1, userName);
+		preparedStatement.setObject(1, userName, Types.VARCHAR);
 		logger.debug(UK_USERNAME_STATEMENT + " [" + userName + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String firstName = resultSet.getString("firstName");
+				String id = resultSet.getObject("id", String.class);
+				String firstName = resultSet.getObject("firstName", String.class);
 				PersonVO personVO = new PersonVO(id);
 				personVO.setUserName(userName);
 				personVO.setFirstName(firstName);

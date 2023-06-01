@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_04.persistence.vo.AutoIncVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class AutoIncDAO {
 	
 	public static void create(AutoIncVO autoIncVO, Connection connection) throws SQLException, DataSourceException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT, Statement.RETURN_GENERATED_KEYS);
-		preparedStatement.setString(1, autoIncVO.getName());
+		preparedStatement.setObject(1, autoIncVO.getName(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + autoIncVO.getName() + "]");
 		preparedStatement.executeUpdate();
 		ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -66,7 +67,7 @@ public class AutoIncDAO {
 	public static void create(List<AutoIncVO> autoIncVOs, Connection connection) throws SQLException, DataSourceException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT, Statement.RETURN_GENERATED_KEYS);
 		for (AutoIncVO autoIncVO : autoIncVOs) {
-			preparedStatement.setString(1, autoIncVO.getName());
+			preparedStatement.setObject(1, autoIncVO.getName(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + autoIncVO.getName() + "]");
 			preparedStatement.addBatch();
 		}
@@ -103,7 +104,7 @@ public class AutoIncDAO {
 		try {
 			if (resultSet.next()) {
 				AutoIncVO autoIncVO = new AutoIncVO(id);
-				autoIncVO.setName(resultSet.getString("name"));
+				autoIncVO.setName(resultSet.getObject("name", String.class));
 				return autoIncVO;
 			} else {
 				throw new EntityNotFoundException("Entity 'auto_inc' with primary key field 'id' = [" + id + "] not found!");
@@ -146,7 +147,7 @@ public class AutoIncDAO {
 	
 	public static void update(AutoIncVO autoIncVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, autoIncVO.getName());
+		preparedStatement.setObject(1, autoIncVO.getName(), Types.VARCHAR);
 		preparedStatement.setInt(2, autoIncVO.getId());
 		logger.debug(UPDATE_STATEMENT + " [" + autoIncVO.getName() + "][" + autoIncVO.getId() + "]");
 		preparedStatement.executeUpdate();
@@ -172,7 +173,7 @@ public class AutoIncDAO {
 		try {
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
-				String name = resultSet.getString("name");
+				String name = resultSet.getObject("name", String.class);
 				AutoIncVO autoIncVO = new AutoIncVO(id);
 				autoIncVO.setName(name);
 				autoIncVOs.add(autoIncVO);

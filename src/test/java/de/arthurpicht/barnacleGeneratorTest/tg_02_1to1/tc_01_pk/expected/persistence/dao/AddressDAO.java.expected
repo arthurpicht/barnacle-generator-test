@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_01.persistence.vo.AddressVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -39,8 +40,8 @@ public class AddressDAO {
 	
 	public static void create(AddressVO addressVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, addressVO.getUserId());
-		preparedStatement.setString(2, addressVO.getEmail());
+		preparedStatement.setObject(1, addressVO.getUserId(), Types.VARCHAR);
+		preparedStatement.setObject(2, addressVO.getEmail(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + addressVO.getUserId() + "][" + addressVO.getEmail() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -60,8 +61,8 @@ public class AddressDAO {
 	public static void create(List<AddressVO> addressVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (AddressVO addressVO : addressVOs) {
-			preparedStatement.setString(1, addressVO.getUserId());
-			preparedStatement.setString(2, addressVO.getEmail());
+			preparedStatement.setObject(1, addressVO.getUserId(), Types.VARCHAR);
+			preparedStatement.setObject(2, addressVO.getEmail(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + addressVO.getUserId() + "][" + addressVO.getEmail() + "]");
 			preparedStatement.addBatch();
 		}
@@ -82,13 +83,13 @@ public class AddressDAO {
 	
 	public static AddressVO load(String userId, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, userId);
+		preparedStatement.setObject(1, userId, Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + userId + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
 				AddressVO addressVO = new AddressVO(userId);
-				addressVO.setEmail(resultSet.getString("email"));
+				addressVO.setEmail(resultSet.getObject("email", String.class));
 				return addressVO;
 			} else {
 				throw new EntityNotFoundException("Entity 'address' with primary key field 'userId' = [" + userId + "] not found!");
@@ -112,7 +113,7 @@ public class AddressDAO {
 	
 	public static void delete(String userId, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, userId);
+		preparedStatement.setObject(1, userId, Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + userId + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -131,8 +132,8 @@ public class AddressDAO {
 	
 	public static void update(AddressVO addressVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, addressVO.getEmail());
-		preparedStatement.setString(2, addressVO.getUserId());
+		preparedStatement.setObject(1, addressVO.getEmail(), Types.VARCHAR);
+		preparedStatement.setObject(2, addressVO.getUserId(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + addressVO.getEmail() + "][" + addressVO.getUserId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -156,8 +157,8 @@ public class AddressDAO {
 		List<AddressVO> addressVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String userId = resultSet.getString("userId");
-				String email = resultSet.getString("email");
+				String userId = resultSet.getObject("userId", String.class);
+				String email = resultSet.getObject("email", String.class);
 				AddressVO addressVO = new AddressVO(userId);
 				addressVO.setEmail(email);
 				addressVOs.add(addressVO);
@@ -182,13 +183,13 @@ public class AddressDAO {
 	
 	public static List<AddressVO> findByFk_address_1(String userId, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(FK_ADDRESS_1_STATEMENT);
-		preparedStatement.setString(1, userId);
+		preparedStatement.setObject(1, userId, Types.VARCHAR);
 		logger.debug(FK_ADDRESS_1_STATEMENT + " [" + userId + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<AddressVO> addressVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String email = resultSet.getString("email");
+				String email = resultSet.getObject("email", String.class);
 				AddressVO addressVO = new AddressVO(userId);
 				addressVO.setEmail(email);
 				addressVOList.add(addressVO);

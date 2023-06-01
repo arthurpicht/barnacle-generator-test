@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vo.PersonCompositeVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -39,8 +40,8 @@ public class PersonCompositeDAO {
 	
 	public static void create(PersonCompositeVO personCompositeVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, personCompositeVO.getFirstName());
-		preparedStatement.setString(2, personCompositeVO.getLastName());
+		preparedStatement.setObject(1, personCompositeVO.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(2, personCompositeVO.getLastName(), Types.VARCHAR);
 		preparedStatement.setInt(3, personCompositeVO.getAge());
 		logger.debug(CREATE_STATEMENT + " [" + personCompositeVO.getFirstName() + "][" + personCompositeVO.getLastName() + "][" + personCompositeVO.getAge() + "]");
 		preparedStatement.executeUpdate();
@@ -61,8 +62,8 @@ public class PersonCompositeDAO {
 	public static void create(List<PersonCompositeVO> personCompositeVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (PersonCompositeVO personCompositeVO : personCompositeVOs) {
-			preparedStatement.setString(1, personCompositeVO.getFirstName());
-			preparedStatement.setString(2, personCompositeVO.getLastName());
+			preparedStatement.setObject(1, personCompositeVO.getFirstName(), Types.VARCHAR);
+			preparedStatement.setObject(2, personCompositeVO.getLastName(), Types.VARCHAR);
 			preparedStatement.setInt(3, personCompositeVO.getAge());
 			logger.debug(CREATE_STATEMENT + " [" + personCompositeVO.getFirstName() + "][" + personCompositeVO.getLastName() + "][" + personCompositeVO.getAge() + "]");
 			preparedStatement.addBatch();
@@ -84,8 +85,8 @@ public class PersonCompositeDAO {
 	
 	public static PersonCompositeVO load(PersonCompositePK personCompositePK, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, personCompositePK.getFirstName());
-		preparedStatement.setString(2, personCompositePK.getLastName());
+		preparedStatement.setObject(1, personCompositePK.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(2, personCompositePK.getLastName(), Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + personCompositePK.getFirstName() + "][" + personCompositePK.getLastName() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
@@ -115,8 +116,8 @@ public class PersonCompositeDAO {
 	
 	public static void delete(PersonCompositePK personCompositePK, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, personCompositePK.getFirstName());
-		preparedStatement.setString(2, personCompositePK.getLastName());
+		preparedStatement.setObject(1, personCompositePK.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(2, personCompositePK.getLastName(), Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + personCompositePK.getFirstName() + "][" + personCompositePK.getLastName() + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -136,8 +137,8 @@ public class PersonCompositeDAO {
 	public static void update(PersonCompositeVO personCompositeVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
 		preparedStatement.setInt(1, personCompositeVO.getAge());
-		preparedStatement.setString(2, personCompositeVO.getFirstName());
-		preparedStatement.setString(3, personCompositeVO.getLastName());
+		preparedStatement.setObject(2, personCompositeVO.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(3, personCompositeVO.getLastName(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + personCompositeVO.getAge() + "][" + personCompositeVO.getFirstName() + "][" + personCompositeVO.getLastName() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -161,8 +162,8 @@ public class PersonCompositeDAO {
 		List<PersonCompositeVO> personCompositeVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String firstName = resultSet.getString("first_name");
-				String lastName = resultSet.getString("last_name");
+				String firstName = resultSet.getObject("first_name", String.class);
+				String lastName = resultSet.getObject("last_name", String.class);
 				int age = resultSet.getInt("age");
 				PersonCompositePK personCompositePK = new PersonCompositePK(firstName, lastName);
 				PersonCompositeVO personCompositeVO = new PersonCompositeVO(personCompositePK);

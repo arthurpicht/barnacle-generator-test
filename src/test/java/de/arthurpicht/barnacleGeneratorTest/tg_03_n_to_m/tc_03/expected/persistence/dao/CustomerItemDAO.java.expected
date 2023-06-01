@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo.CustomerItemVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -47,10 +48,10 @@ public class CustomerItemDAO {
 	
 	public static void create(CustomerItemVO customerItemVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, customerItemVO.getCustomerIdPart1());
-		preparedStatement.setString(2, customerItemVO.getCustomerIdPart2());
-		preparedStatement.setString(3, customerItemVO.getItemId1());
-		preparedStatement.setString(4, customerItemVO.getItemId2());
+		preparedStatement.setObject(1, customerItemVO.getCustomerIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerItemVO.getCustomerIdPart2(), Types.VARCHAR);
+		preparedStatement.setObject(3, customerItemVO.getItemId1(), Types.VARCHAR);
+		preparedStatement.setObject(4, customerItemVO.getItemId2(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + customerItemVO.getCustomerIdPart1() + "][" + customerItemVO.getCustomerIdPart2() + "][" + customerItemVO.getItemId1() + "][" + customerItemVO.getItemId2() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -70,10 +71,10 @@ public class CustomerItemDAO {
 	public static void create(List<CustomerItemVO> customerItemVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (CustomerItemVO customerItemVO : customerItemVOs) {
-			preparedStatement.setString(1, customerItemVO.getCustomerIdPart1());
-			preparedStatement.setString(2, customerItemVO.getCustomerIdPart2());
-			preparedStatement.setString(3, customerItemVO.getItemId1());
-			preparedStatement.setString(4, customerItemVO.getItemId2());
+			preparedStatement.setObject(1, customerItemVO.getCustomerIdPart1(), Types.VARCHAR);
+			preparedStatement.setObject(2, customerItemVO.getCustomerIdPart2(), Types.VARCHAR);
+			preparedStatement.setObject(3, customerItemVO.getItemId1(), Types.VARCHAR);
+			preparedStatement.setObject(4, customerItemVO.getItemId2(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + customerItemVO.getCustomerIdPart1() + "][" + customerItemVO.getCustomerIdPart2() + "][" + customerItemVO.getItemId1() + "][" + customerItemVO.getItemId2() + "]");
 			preparedStatement.addBatch();
 		}
@@ -94,10 +95,10 @@ public class CustomerItemDAO {
 	
 	public static CustomerItemVO load(CustomerItemPK customerItemPK, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, customerItemPK.getCustomerIdPart1());
-		preparedStatement.setString(2, customerItemPK.getCustomerIdPart2());
-		preparedStatement.setString(3, customerItemPK.getItemId1());
-		preparedStatement.setString(4, customerItemPK.getItemId2());
+		preparedStatement.setObject(1, customerItemPK.getCustomerIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerItemPK.getCustomerIdPart2(), Types.VARCHAR);
+		preparedStatement.setObject(3, customerItemPK.getItemId1(), Types.VARCHAR);
+		preparedStatement.setObject(4, customerItemPK.getItemId2(), Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + customerItemPK.getCustomerIdPart1() + "][" + customerItemPK.getCustomerIdPart2() + "][" + customerItemPK.getItemId1() + "][" + customerItemPK.getItemId2() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
@@ -126,10 +127,10 @@ public class CustomerItemDAO {
 	
 	public static void delete(CustomerItemPK customerItemPK, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, customerItemPK.getCustomerIdPart1());
-		preparedStatement.setString(2, customerItemPK.getCustomerIdPart2());
-		preparedStatement.setString(3, customerItemPK.getItemId1());
-		preparedStatement.setString(4, customerItemPK.getItemId2());
+		preparedStatement.setObject(1, customerItemPK.getCustomerIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerItemPK.getCustomerIdPart2(), Types.VARCHAR);
+		preparedStatement.setObject(3, customerItemPK.getItemId1(), Types.VARCHAR);
+		preparedStatement.setObject(4, customerItemPK.getItemId2(), Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + customerItemPK.getCustomerIdPart1() + "][" + customerItemPK.getCustomerIdPart2() + "][" + customerItemPK.getItemId1() + "][" + customerItemPK.getItemId2() + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -148,10 +149,10 @@ public class CustomerItemDAO {
 	
 	public static void update(CustomerItemVO customerItemVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, customerItemVO.getCustomerIdPart1());
-		preparedStatement.setString(2, customerItemVO.getCustomerIdPart2());
-		preparedStatement.setString(3, customerItemVO.getItemId1());
-		preparedStatement.setString(4, customerItemVO.getItemId2());
+		preparedStatement.setObject(1, customerItemVO.getCustomerIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerItemVO.getCustomerIdPart2(), Types.VARCHAR);
+		preparedStatement.setObject(3, customerItemVO.getItemId1(), Types.VARCHAR);
+		preparedStatement.setObject(4, customerItemVO.getItemId2(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + customerItemVO.getCustomerIdPart1() + "][" + customerItemVO.getCustomerIdPart2() + "][" + customerItemVO.getItemId1() + "][" + customerItemVO.getItemId2() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -175,10 +176,10 @@ public class CustomerItemDAO {
 		List<CustomerItemVO> customerItemVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String customerIdPart1 = resultSet.getString("customerIdPart1");
-				String customerIdPart2 = resultSet.getString("customerIdPart2");
-				String itemId1 = resultSet.getString("itemId1");
-				String itemId2 = resultSet.getString("itemId2");
+				String customerIdPart1 = resultSet.getObject("customerIdPart1", String.class);
+				String customerIdPart2 = resultSet.getObject("customerIdPart2", String.class);
+				String itemId1 = resultSet.getObject("itemId1", String.class);
+				String itemId2 = resultSet.getObject("itemId2", String.class);
 				CustomerItemPK customerItemPK = new CustomerItemPK(customerIdPart1, customerIdPart2, itemId1, itemId2);
 				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
 				customerItemVOs.add(customerItemVO);
@@ -203,15 +204,15 @@ public class CustomerItemDAO {
 	
 	public static List<CustomerItemVO> findByFk_customer(String customerIdPart1, String customerIdPart2, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(FK_CUSTOMER_STATEMENT);
-		preparedStatement.setString(1, customerIdPart1);
-		preparedStatement.setString(2, customerIdPart2);
+		preparedStatement.setObject(1, customerIdPart1, Types.VARCHAR);
+		preparedStatement.setObject(2, customerIdPart2, Types.VARCHAR);
 		logger.debug(FK_CUSTOMER_STATEMENT + " [" + customerIdPart1 + "][" + customerIdPart2 + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<CustomerItemVO> customerItemVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String itemId1 = resultSet.getString("itemId1");
-				String itemId2 = resultSet.getString("itemId2");
+				String itemId1 = resultSet.getObject("itemId1", String.class);
+				String itemId2 = resultSet.getObject("itemId2", String.class);
 				CustomerItemPK customerItemPK = new CustomerItemPK(customerIdPart1, customerIdPart2, itemId1, itemId2);
 				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
 				customerItemVOList.add(customerItemVO);
@@ -236,15 +237,15 @@ public class CustomerItemDAO {
 	
 	public static List<CustomerItemVO> findByFk_item(String itemId1, String itemId2, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(FK_ITEM_STATEMENT);
-		preparedStatement.setString(1, itemId1);
-		preparedStatement.setString(2, itemId2);
+		preparedStatement.setObject(1, itemId1, Types.VARCHAR);
+		preparedStatement.setObject(2, itemId2, Types.VARCHAR);
 		logger.debug(FK_ITEM_STATEMENT + " [" + itemId1 + "][" + itemId2 + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<CustomerItemVO> customerItemVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String customerIdPart1 = resultSet.getString("customerIdPart1");
-				String customerIdPart2 = resultSet.getString("customerIdPart2");
+				String customerIdPart1 = resultSet.getObject("customerIdPart1", String.class);
+				String customerIdPart2 = resultSet.getObject("customerIdPart2", String.class);
 				CustomerItemPK customerItemPK = new CustomerItemPK(customerIdPart1, customerIdPart2, itemId1, itemId2);
 				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
 				customerItemVOList.add(customerItemVO);
@@ -269,16 +270,16 @@ public class CustomerItemDAO {
 	
 	public static List<ItemVO> getAssociatedItemVO(CustomerVO customerVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(ASSOC_ITEM_STATEMENT);
-		preparedStatement.setString(1, customerVO.getIdPart1());
-		preparedStatement.setString(2, customerVO.getIdPart2());
+		preparedStatement.setObject(1, customerVO.getIdPart1(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerVO.getIdPart2(), Types.VARCHAR);
 		logger.debug(ASSOC_ITEM_STATEMENT + " [" + customerVO.getIdPart1() + "][" + customerVO.getIdPart2() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<ItemVO> itemVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id1 = resultSet.getString("id1");
-				String id2 = resultSet.getString("id2");
-				String description = resultSet.getString("description");
+				String id1 = resultSet.getObject("id1", String.class);
+				String id2 = resultSet.getObject("id2", String.class);
+				String description = resultSet.getObject("description", String.class);
 				ItemPK itemPK = new ItemPK(id1, id2);
 				ItemVO itemVO = new ItemVO(itemPK);
 				itemVO.setDescription(description);
@@ -304,16 +305,16 @@ public class CustomerItemDAO {
 	
 	public static List<CustomerVO> getAssociatedCustomerVO(ItemVO itemVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(ASSOC_CUSTOMER_STATEMENT);
-		preparedStatement.setString(1, itemVO.getId1());
-		preparedStatement.setString(2, itemVO.getId2());
+		preparedStatement.setObject(1, itemVO.getId1(), Types.VARCHAR);
+		preparedStatement.setObject(2, itemVO.getId2(), Types.VARCHAR);
 		logger.debug(ASSOC_CUSTOMER_STATEMENT + " [" + itemVO.getId1() + "][" + itemVO.getId2() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<CustomerVO> customerVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String idPart1 = resultSet.getString("id_part_1");
-				String idPart2 = resultSet.getString("id_part_2");
-				String name = resultSet.getString("name");
+				String idPart1 = resultSet.getObject("id_part_1", String.class);
+				String idPart2 = resultSet.getObject("id_part_2", String.class);
+				String name = resultSet.getObject("name", String.class);
 				CustomerPK customerPK = new CustomerPK(idPart1, idPart2);
 				CustomerVO customerVO = new CustomerVO(customerPK);
 				customerVO.setName(name);

@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.vo.ObjectTypesVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -38,14 +39,14 @@ public class ObjectTypesDAO {
 	
 	public static void create(ObjectTypesVO objectTypesVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, objectTypesVO.getId());
-		preparedStatement.setBoolean(2, objectTypesVO.getMyBoolean());
-		preparedStatement.setInt(3, objectTypesVO.getMyInt());
-		preparedStatement.setLong(4, objectTypesVO.getMyLong());
-		preparedStatement.setFloat(5, objectTypesVO.getMyFloat());
-		preparedStatement.setDouble(6, objectTypesVO.getMyDouble());
-		preparedStatement.setByte(7, objectTypesVO.getMyByte());
-		preparedStatement.setShort(8, objectTypesVO.getMyShort());
+		preparedStatement.setObject(1, objectTypesVO.getId(), Types.VARCHAR);
+		preparedStatement.setObject(2, objectTypesVO.getMyBoolean(), Types.TINYINT);
+		preparedStatement.setObject(3, objectTypesVO.getMyInt(), Types.INTEGER);
+		preparedStatement.setObject(4, objectTypesVO.getMyLong(), Types.BIGINT);
+		preparedStatement.setObject(5, objectTypesVO.getMyFloat(), Types.DOUBLE);
+		preparedStatement.setObject(6, objectTypesVO.getMyDouble(), Types.DOUBLE);
+		preparedStatement.setObject(7, objectTypesVO.getMyByte(), Types.TINYINT);
+		preparedStatement.setObject(8, objectTypesVO.getMyShort(), Types.SMALLINT);
 		logger.debug(CREATE_STATEMENT + " [" + objectTypesVO.getId() + "][" + objectTypesVO.getMyBoolean() + "][" + objectTypesVO.getMyInt() + "][" + objectTypesVO.getMyLong() + "][" + objectTypesVO.getMyFloat() + "][" + objectTypesVO.getMyDouble() + "][" + objectTypesVO.getMyByte() + "][" + objectTypesVO.getMyShort() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -65,14 +66,14 @@ public class ObjectTypesDAO {
 	public static void create(List<ObjectTypesVO> objectTypesVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (ObjectTypesVO objectTypesVO : objectTypesVOs) {
-			preparedStatement.setString(1, objectTypesVO.getId());
-			preparedStatement.setBoolean(2, objectTypesVO.getMyBoolean());
-			preparedStatement.setInt(3, objectTypesVO.getMyInt());
-			preparedStatement.setLong(4, objectTypesVO.getMyLong());
-			preparedStatement.setFloat(5, objectTypesVO.getMyFloat());
-			preparedStatement.setDouble(6, objectTypesVO.getMyDouble());
-			preparedStatement.setByte(7, objectTypesVO.getMyByte());
-			preparedStatement.setShort(8, objectTypesVO.getMyShort());
+			preparedStatement.setObject(1, objectTypesVO.getId(), Types.VARCHAR);
+			preparedStatement.setObject(2, objectTypesVO.getMyBoolean(), Types.TINYINT);
+			preparedStatement.setObject(3, objectTypesVO.getMyInt(), Types.INTEGER);
+			preparedStatement.setObject(4, objectTypesVO.getMyLong(), Types.BIGINT);
+			preparedStatement.setObject(5, objectTypesVO.getMyFloat(), Types.DOUBLE);
+			preparedStatement.setObject(6, objectTypesVO.getMyDouble(), Types.DOUBLE);
+			preparedStatement.setObject(7, objectTypesVO.getMyByte(), Types.TINYINT);
+			preparedStatement.setObject(8, objectTypesVO.getMyShort(), Types.SMALLINT);
 			logger.debug(CREATE_STATEMENT + " [" + objectTypesVO.getId() + "][" + objectTypesVO.getMyBoolean() + "][" + objectTypesVO.getMyInt() + "][" + objectTypesVO.getMyLong() + "][" + objectTypesVO.getMyFloat() + "][" + objectTypesVO.getMyDouble() + "][" + objectTypesVO.getMyByte() + "][" + objectTypesVO.getMyShort() + "]");
 			preparedStatement.addBatch();
 		}
@@ -93,19 +94,19 @@ public class ObjectTypesDAO {
 	
 	public static ObjectTypesVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + id + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
 				ObjectTypesVO objectTypesVO = new ObjectTypesVO(id);
-				objectTypesVO.setMyBoolean(resultSet.getBoolean("my_boolean"));
-				objectTypesVO.setMyInt(resultSet.getInt("my_int"));
-				objectTypesVO.setMyLong(resultSet.getLong("my_long"));
-				objectTypesVO.setMyFloat(resultSet.getFloat("my_float"));
-				objectTypesVO.setMyDouble(resultSet.getDouble("my_double"));
-				objectTypesVO.setMyByte(resultSet.getByte("my_byte"));
-				objectTypesVO.setMyShort(resultSet.getShort("my_short"));
+				objectTypesVO.setMyBoolean(resultSet.getObject("my_boolean", Boolean.class));
+				objectTypesVO.setMyInt(resultSet.getObject("my_int", Integer.class));
+				objectTypesVO.setMyLong(resultSet.getObject("my_long", Long.class));
+				objectTypesVO.setMyFloat(resultSet.getObject("my_float", Float.class));
+				objectTypesVO.setMyDouble(resultSet.getObject("my_double", Double.class));
+				objectTypesVO.setMyByte(resultSet.getObject("my_byte", Byte.class));
+				objectTypesVO.setMyShort(resultSet.getObject("my_short", Short.class));
 				return objectTypesVO;
 			} else {
 				throw new EntityNotFoundException("Entity 'object_types' with primary key field 'id' = [" + id + "] not found!");
@@ -129,7 +130,7 @@ public class ObjectTypesDAO {
 	
 	public static void delete(String id, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + id + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -148,14 +149,14 @@ public class ObjectTypesDAO {
 	
 	public static void update(ObjectTypesVO objectTypesVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setBoolean(1, objectTypesVO.getMyBoolean());
-		preparedStatement.setInt(2, objectTypesVO.getMyInt());
-		preparedStatement.setLong(3, objectTypesVO.getMyLong());
-		preparedStatement.setFloat(4, objectTypesVO.getMyFloat());
-		preparedStatement.setDouble(5, objectTypesVO.getMyDouble());
-		preparedStatement.setByte(6, objectTypesVO.getMyByte());
-		preparedStatement.setShort(7, objectTypesVO.getMyShort());
-		preparedStatement.setString(8, objectTypesVO.getId());
+		preparedStatement.setObject(1, objectTypesVO.getMyBoolean(), Types.TINYINT);
+		preparedStatement.setObject(2, objectTypesVO.getMyInt(), Types.INTEGER);
+		preparedStatement.setObject(3, objectTypesVO.getMyLong(), Types.BIGINT);
+		preparedStatement.setObject(4, objectTypesVO.getMyFloat(), Types.DOUBLE);
+		preparedStatement.setObject(5, objectTypesVO.getMyDouble(), Types.DOUBLE);
+		preparedStatement.setObject(6, objectTypesVO.getMyByte(), Types.TINYINT);
+		preparedStatement.setObject(7, objectTypesVO.getMyShort(), Types.SMALLINT);
+		preparedStatement.setObject(8, objectTypesVO.getId(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + objectTypesVO.getMyBoolean() + "][" + objectTypesVO.getMyInt() + "][" + objectTypesVO.getMyLong() + "][" + objectTypesVO.getMyFloat() + "][" + objectTypesVO.getMyDouble() + "][" + objectTypesVO.getMyByte() + "][" + objectTypesVO.getMyShort() + "][" + objectTypesVO.getId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -179,14 +180,14 @@ public class ObjectTypesDAO {
 		List<ObjectTypesVO> objectTypesVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id = resultSet.getString("id");
-				Boolean myBoolean = resultSet.getBoolean("my_boolean");
-				Integer myInt = resultSet.getInt("my_int");
-				Long myLong = resultSet.getLong("my_long");
-				Float myFloat = resultSet.getFloat("my_float");
-				Double myDouble = resultSet.getDouble("my_double");
-				Byte myByte = resultSet.getByte("my_byte");
-				Short myShort = resultSet.getShort("my_short");
+				String id = resultSet.getObject("id", String.class);
+				Boolean myBoolean = resultSet.getObject("my_boolean", Boolean.class);
+				Integer myInt = resultSet.getObject("my_int", Integer.class);
+				Long myLong = resultSet.getObject("my_long", Long.class);
+				Float myFloat = resultSet.getObject("my_float", Float.class);
+				Double myDouble = resultSet.getObject("my_double", Double.class);
+				Byte myByte = resultSet.getObject("my_byte", Byte.class);
+				Short myShort = resultSet.getObject("my_short", Short.class);
 				ObjectTypesVO objectTypesVO = new ObjectTypesVO(id);
 				objectTypesVO.setMyBoolean(myBoolean);
 				objectTypesVO.setMyInt(myInt);

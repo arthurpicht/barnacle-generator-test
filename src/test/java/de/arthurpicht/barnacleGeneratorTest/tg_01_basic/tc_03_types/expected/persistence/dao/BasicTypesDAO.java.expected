@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.vo.BasicTypesVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class BasicTypesDAO {
 	
 	public static void create(BasicTypesVO basicTypesVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, basicTypesVO.getId());
+		preparedStatement.setObject(1, basicTypesVO.getId(), Types.VARCHAR);
 		preparedStatement.setBoolean(2, basicTypesVO.getMyBoolean());
 		preparedStatement.setInt(3, basicTypesVO.getMyInt());
 		preparedStatement.setLong(4, basicTypesVO.getMyLong());
@@ -65,7 +66,7 @@ public class BasicTypesDAO {
 	public static void create(List<BasicTypesVO> basicTypesVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (BasicTypesVO basicTypesVO : basicTypesVOs) {
-			preparedStatement.setString(1, basicTypesVO.getId());
+			preparedStatement.setObject(1, basicTypesVO.getId(), Types.VARCHAR);
 			preparedStatement.setBoolean(2, basicTypesVO.getMyBoolean());
 			preparedStatement.setInt(3, basicTypesVO.getMyInt());
 			preparedStatement.setLong(4, basicTypesVO.getMyLong());
@@ -93,7 +94,7 @@ public class BasicTypesDAO {
 	
 	public static BasicTypesVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + id + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
@@ -129,7 +130,7 @@ public class BasicTypesDAO {
 	
 	public static void delete(String id, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + id + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -155,7 +156,7 @@ public class BasicTypesDAO {
 		preparedStatement.setDouble(5, basicTypesVO.getMyDouble());
 		preparedStatement.setByte(6, basicTypesVO.getMyByte());
 		preparedStatement.setShort(7, basicTypesVO.getMyShort());
-		preparedStatement.setString(8, basicTypesVO.getId());
+		preparedStatement.setObject(8, basicTypesVO.getId(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + basicTypesVO.getMyBoolean() + "][" + basicTypesVO.getMyInt() + "][" + basicTypesVO.getMyLong() + "][" + basicTypesVO.getMyFloat() + "][" + basicTypesVO.getMyDouble() + "][" + basicTypesVO.getMyByte() + "][" + basicTypesVO.getMyShort() + "][" + basicTypesVO.getId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -179,7 +180,7 @@ public class BasicTypesDAO {
 		List<BasicTypesVO> basicTypesVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id = resultSet.getString("id");
+				String id = resultSet.getObject("id", String.class);
 				boolean myBoolean = resultSet.getBoolean("my_boolean");
 				int myInt = resultSet.getInt("my_int");
 				long myLong = resultSet.getLong("my_long");

@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo.CustomerItemVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -45,8 +46,8 @@ public class CustomerItemDAO {
 	
 	public static void create(CustomerItemVO customerItemVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, customerItemVO.getCustomerId());
-		preparedStatement.setString(2, customerItemVO.getItemId());
+		preparedStatement.setObject(1, customerItemVO.getCustomerId(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerItemVO.getItemId(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + customerItemVO.getCustomerId() + "][" + customerItemVO.getItemId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -66,8 +67,8 @@ public class CustomerItemDAO {
 	public static void create(List<CustomerItemVO> customerItemVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (CustomerItemVO customerItemVO : customerItemVOs) {
-			preparedStatement.setString(1, customerItemVO.getCustomerId());
-			preparedStatement.setString(2, customerItemVO.getItemId());
+			preparedStatement.setObject(1, customerItemVO.getCustomerId(), Types.VARCHAR);
+			preparedStatement.setObject(2, customerItemVO.getItemId(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + customerItemVO.getCustomerId() + "][" + customerItemVO.getItemId() + "]");
 			preparedStatement.addBatch();
 		}
@@ -88,8 +89,8 @@ public class CustomerItemDAO {
 	
 	public static CustomerItemVO load(CustomerItemPK customerItemPK, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, customerItemPK.getCustomerId());
-		preparedStatement.setString(2, customerItemPK.getItemId());
+		preparedStatement.setObject(1, customerItemPK.getCustomerId(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerItemPK.getItemId(), Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + customerItemPK.getCustomerId() + "][" + customerItemPK.getItemId() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
@@ -118,8 +119,8 @@ public class CustomerItemDAO {
 	
 	public static void delete(CustomerItemPK customerItemPK, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, customerItemPK.getCustomerId());
-		preparedStatement.setString(2, customerItemPK.getItemId());
+		preparedStatement.setObject(1, customerItemPK.getCustomerId(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerItemPK.getItemId(), Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + customerItemPK.getCustomerId() + "][" + customerItemPK.getItemId() + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -138,8 +139,8 @@ public class CustomerItemDAO {
 	
 	public static void update(CustomerItemVO customerItemVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, customerItemVO.getCustomerId());
-		preparedStatement.setString(2, customerItemVO.getItemId());
+		preparedStatement.setObject(1, customerItemVO.getCustomerId(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerItemVO.getItemId(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + customerItemVO.getCustomerId() + "][" + customerItemVO.getItemId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -163,8 +164,8 @@ public class CustomerItemDAO {
 		List<CustomerItemVO> customerItemVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String customerId = resultSet.getString("customerId");
-				String itemId = resultSet.getString("itemId");
+				String customerId = resultSet.getObject("customerId", String.class);
+				String itemId = resultSet.getObject("itemId", String.class);
 				CustomerItemPK customerItemPK = new CustomerItemPK(customerId, itemId);
 				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
 				customerItemVOs.add(customerItemVO);
@@ -189,13 +190,13 @@ public class CustomerItemDAO {
 	
 	public static List<CustomerItemVO> findByFk_customer(String customerId, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(FK_CUSTOMER_STATEMENT);
-		preparedStatement.setString(1, customerId);
+		preparedStatement.setObject(1, customerId, Types.VARCHAR);
 		logger.debug(FK_CUSTOMER_STATEMENT + " [" + customerId + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<CustomerItemVO> customerItemVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String itemId = resultSet.getString("itemId");
+				String itemId = resultSet.getObject("itemId", String.class);
 				CustomerItemPK customerItemPK = new CustomerItemPK(customerId, itemId);
 				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
 				customerItemVOList.add(customerItemVO);
@@ -220,13 +221,13 @@ public class CustomerItemDAO {
 	
 	public static List<CustomerItemVO> findByFk_item(String itemId, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(FK_ITEM_STATEMENT);
-		preparedStatement.setString(1, itemId);
+		preparedStatement.setObject(1, itemId, Types.VARCHAR);
 		logger.debug(FK_ITEM_STATEMENT + " [" + itemId + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<CustomerItemVO> customerItemVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String customerId = resultSet.getString("customerId");
+				String customerId = resultSet.getObject("customerId", String.class);
 				CustomerItemPK customerItemPK = new CustomerItemPK(customerId, itemId);
 				CustomerItemVO customerItemVO = new CustomerItemVO(customerItemPK);
 				customerItemVOList.add(customerItemVO);
@@ -251,14 +252,14 @@ public class CustomerItemDAO {
 	
 	public static List<ItemVO> getAssociatedItemVO(CustomerVO customerVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(ASSOC_ITEM_STATEMENT);
-		preparedStatement.setString(1, customerVO.getId());
+		preparedStatement.setObject(1, customerVO.getId(), Types.VARCHAR);
 		logger.debug(ASSOC_ITEM_STATEMENT + " [" + customerVO.getId() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<ItemVO> itemVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String description = resultSet.getString("description");
+				String id = resultSet.getObject("id", String.class);
+				String description = resultSet.getObject("description", String.class);
 				ItemVO itemVO = new ItemVO(id);
 				itemVO.setDescription(description);
 				itemVOList.add(itemVO);
@@ -283,14 +284,14 @@ public class CustomerItemDAO {
 	
 	public static List<CustomerVO> getAssociatedCustomerVO(ItemVO itemVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(ASSOC_CUSTOMER_STATEMENT);
-		preparedStatement.setString(1, itemVO.getId());
+		preparedStatement.setObject(1, itemVO.getId(), Types.VARCHAR);
 		logger.debug(ASSOC_CUSTOMER_STATEMENT + " [" + itemVO.getId() + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		List<CustomerVO> customerVOList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String name = resultSet.getString("name");
+				String id = resultSet.getObject("id", String.class);
+				String name = resultSet.getObject("name", String.class);
 				CustomerVO customerVO = new CustomerVO(id);
 				customerVO.setName(name);
 				customerVOList.add(customerVO);

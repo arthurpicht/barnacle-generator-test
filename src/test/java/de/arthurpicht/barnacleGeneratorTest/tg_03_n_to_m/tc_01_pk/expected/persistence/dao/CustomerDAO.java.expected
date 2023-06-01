@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_01.persistence.vo.CustomerVO;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 import org.slf4j.Logger;
@@ -38,8 +39,8 @@ public class CustomerDAO {
 	
 	public static void create(CustomerVO customerVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
-		preparedStatement.setString(1, customerVO.getId());
-		preparedStatement.setString(2, customerVO.getName());
+		preparedStatement.setObject(1, customerVO.getId(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerVO.getName(), Types.VARCHAR);
 		logger.debug(CREATE_STATEMENT + " [" + customerVO.getId() + "][" + customerVO.getName() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -59,8 +60,8 @@ public class CustomerDAO {
 	public static void create(List<CustomerVO> customerVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (CustomerVO customerVO : customerVOs) {
-			preparedStatement.setString(1, customerVO.getId());
-			preparedStatement.setString(2, customerVO.getName());
+			preparedStatement.setObject(1, customerVO.getId(), Types.VARCHAR);
+			preparedStatement.setObject(2, customerVO.getName(), Types.VARCHAR);
 			logger.debug(CREATE_STATEMENT + " [" + customerVO.getId() + "][" + customerVO.getName() + "]");
 			preparedStatement.addBatch();
 		}
@@ -81,13 +82,13 @@ public class CustomerDAO {
 	
 	public static CustomerVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(LOAD_STATEMENT + " [" + id + "]");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		try {
 			if (resultSet.next()) {
 				CustomerVO customerVO = new CustomerVO(id);
-				customerVO.setName(resultSet.getString("name"));
+				customerVO.setName(resultSet.getObject("name", String.class));
 				return customerVO;
 			} else {
 				throw new EntityNotFoundException("Entity 'customer' with primary key field 'id' = [" + id + "] not found!");
@@ -111,7 +112,7 @@ public class CustomerDAO {
 	
 	public static void delete(String id, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
-		preparedStatement.setString(1, id);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
 		logger.debug(DELETE_STATEMENT + " [" + id + "]");
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -130,8 +131,8 @@ public class CustomerDAO {
 	
 	public static void update(CustomerVO customerVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
-		preparedStatement.setString(1, customerVO.getName());
-		preparedStatement.setString(2, customerVO.getId());
+		preparedStatement.setObject(1, customerVO.getName(), Types.VARCHAR);
+		preparedStatement.setObject(2, customerVO.getId(), Types.VARCHAR);
 		logger.debug(UPDATE_STATEMENT + " [" + customerVO.getName() + "][" + customerVO.getId() + "]");
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
@@ -155,8 +156,8 @@ public class CustomerDAO {
 		List<CustomerVO> customerVOs = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String name = resultSet.getString("name");
+				String id = resultSet.getObject("id", String.class);
+				String name = resultSet.getObject("name", String.class);
 				CustomerVO customerVO = new CustomerVO(id);
 				customerVO.setName(name);
 				customerVOs.add(customerVO);

@@ -36,7 +36,9 @@ public class CopyExpected {
     }
 
     public static void copyAll() throws IOException {
+        System.out.println("copy all...");
         List<TestCaseIds> testCaseIdsList = TestCaseIdsFinder.findAll();
+        System.out.println("found testCaseIds");
         for (TestCaseIds testCaseIds : testCaseIdsList) {
             System.out.println(testCaseIds);
             copy(testCaseIds);

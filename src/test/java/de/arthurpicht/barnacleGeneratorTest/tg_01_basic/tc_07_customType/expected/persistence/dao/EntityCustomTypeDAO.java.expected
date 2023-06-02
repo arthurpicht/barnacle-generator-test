@@ -1,0 +1,172 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_07.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.Types;
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_07.persistence.vo.EntityCustomTypeVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class EntityCustomTypeDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EntityCustomTypeDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO entitycustomtype (id, code) VALUES (?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM entitycustomtype WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM entitycustomtype WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE entitycustomtype SET code = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM entitycustomtype";
+	
+	public static void create(EntityCustomTypeVO entityCustomTypeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCustomTypeDAO.class);
+		try {
+			create(entityCustomTypeVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCustomTypeDAO.class);
+		}
+	}
+	
+	public static void create(EntityCustomTypeVO entityCustomTypeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setInt(1, entityCustomTypeVO.getId());
+		preparedStatement.setObject(2, entityCustomTypeVO.getCode(), Types.VARCHAR);
+		logger.debug(CREATE_STATEMENT + " [" + entityCustomTypeVO.getId() + "][" + entityCustomTypeVO.getCode() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<EntityCustomTypeVO> entityCustomTypeVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCustomTypeDAO.class);
+		try {
+			create(entityCustomTypeVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCustomTypeDAO.class);
+		}
+	}
+	
+	public static void create(List<EntityCustomTypeVO> entityCustomTypeVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (EntityCustomTypeVO entityCustomTypeVO : entityCustomTypeVOs) {
+			preparedStatement.setInt(1, entityCustomTypeVO.getId());
+			preparedStatement.setObject(2, entityCustomTypeVO.getCode(), Types.VARCHAR);
+			logger.debug(CREATE_STATEMENT + " [" + entityCustomTypeVO.getId() + "][" + entityCustomTypeVO.getCode() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static EntityCustomTypeVO load(int id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(EntityCustomTypeDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCustomTypeDAO.class);
+		}
+	}
+	
+	public static EntityCustomTypeVO load(int id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setInt(1, id);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				EntityCustomTypeVO entityCustomTypeVO = new EntityCustomTypeVO(id);
+				entityCustomTypeVO.setCode(resultSet.getObject("code", String.class));
+				return entityCustomTypeVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'entitycustomtype' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(int id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCustomTypeDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCustomTypeDAO.class);
+		}
+	}
+	
+	public static void delete(int id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setInt(1, id);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(EntityCustomTypeVO entityCustomTypeVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCustomTypeDAO.class);
+		try {
+			update(entityCustomTypeVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCustomTypeDAO.class);
+		}
+	}
+	
+	public static void update(EntityCustomTypeVO entityCustomTypeVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setObject(1, entityCustomTypeVO.getCode(), Types.VARCHAR);
+		preparedStatement.setInt(2, entityCustomTypeVO.getId());
+		logger.debug(UPDATE_STATEMENT + " [" + entityCustomTypeVO.getCode() + "][" + entityCustomTypeVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<EntityCustomTypeVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCustomTypeDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCustomTypeDAO.class);
+		}
+	}
+	
+	public static List<EntityCustomTypeVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<EntityCustomTypeVO> entityCustomTypeVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String code = resultSet.getObject("code", String.class);
+				EntityCustomTypeVO entityCustomTypeVO = new EntityCustomTypeVO(id);
+				entityCustomTypeVO.setCode(code);
+				entityCustomTypeVOs.add(entityCustomTypeVO);
+			}
+			return entityCustomTypeVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

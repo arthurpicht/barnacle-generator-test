@@ -1,0 +1,61 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_07.persistence.vo;
+
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_07.persistence.vof.EntityCustomTypeVOF;
+
+public class EntityCustomTypeVO extends EntityCustomTypeVOF implements Cloneable {
+	
+	public static final String TABLENAME = "entitycustomtype";
+	public static final String ID = "id";
+	public static final String CODE = "code";
+	
+	public EntityCustomTypeVO(int id) {
+		this.id=id;
+	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
+	public void setId(int id) {
+		this.id=id;
+	}
+	
+	public String getCode() {
+		return this.code;
+	}
+	
+	public void setCode(String code) {
+		this.code=code;
+	}
+	
+	public String toString() {
+		return "de.arthurpicht.barnacleGeneratorTest.tg_01.tc_07.persistence.vo.EntityCustomTypeVO["
+			+ "id=" + this.id + "; "
+			+ "code=" + this.code
+			+ "]";
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (o == this) return true;
+		if (o.getClass() != this.getClass()) return false;
+		EntityCustomTypeVO other = (EntityCustomTypeVO) o;
+		if (this.id != other.getId()) return false;
+		if (this.code == null) {
+			if (other.getCode() != null) return false;
+		} else {
+			if (!this.code.equals(other.getCode())) return false;
+		}
+		return true;
+	}
+	
+}

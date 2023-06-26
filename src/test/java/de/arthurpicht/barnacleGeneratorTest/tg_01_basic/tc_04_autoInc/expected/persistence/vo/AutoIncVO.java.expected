@@ -3,7 +3,7 @@ package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_04.persistence.vo;
 
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_04.persistence.vof.AutoIncVOF;
 
-public class AutoIncVO extends AutoIncVOF implements Cloneable {
+public class AutoIncVO extends AutoIncVOF {
 	
 	public static final String TABLENAME = "auto_inc";
 	public static final String ID = "id";
@@ -34,14 +34,6 @@ public class AutoIncVO extends AutoIncVOF implements Cloneable {
 			+ "id=" + this.id + "; "
 			+ "name=" + this.name
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public boolean equals(Object o) {

@@ -1,0 +1,178 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_08.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.Types;
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_08.persistence.vo.EntityCloneableVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class EntityCloneableDAO {
+
+	private static final Logger logger = LoggerFactory.getLogger(EntityCloneableDAO.class);
+
+	private static final String CREATE_STATEMENT = "INSERT INTO entitycloneable (id, first_name, last_name) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM entitycloneable WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM entitycloneable WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE entitycloneable SET first_name = ?, last_name = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM entitycloneable";
+
+	public static void create(EntityCloneableVO entityCloneableVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
+		try {
+			create(entityCloneableVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
+		}
+	}
+
+	public static void create(EntityCloneableVO entityCloneableVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setObject(1, entityCloneableVO.getId(), Types.VARCHAR);
+		preparedStatement.setObject(2, entityCloneableVO.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(3, entityCloneableVO.getLastName(), Types.VARCHAR);
+		logger.debug(CREATE_STATEMENT + " [" + entityCloneableVO.getId() + "][" + entityCloneableVO.getFirstName() + "][" + entityCloneableVO.getLastName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+
+	public static void create(List<EntityCloneableVO> entityCloneableVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
+		try {
+			create(entityCloneableVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
+		}
+	}
+
+	public static void create(List<EntityCloneableVO> entityCloneableVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (EntityCloneableVO entityCloneableVO : entityCloneableVOs) {
+			preparedStatement.setObject(1, entityCloneableVO.getId(), Types.VARCHAR);
+			preparedStatement.setObject(2, entityCloneableVO.getFirstName(), Types.VARCHAR);
+			preparedStatement.setObject(3, entityCloneableVO.getLastName(), Types.VARCHAR);
+			logger.debug(CREATE_STATEMENT + " [" + entityCloneableVO.getId() + "][" + entityCloneableVO.getFirstName() + "][" + entityCloneableVO.getLastName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+
+	public static EntityCloneableVO load(String id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
+		}
+	}
+
+	public static EntityCloneableVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				EntityCloneableVO entityCloneableVO = new EntityCloneableVO(id);
+				entityCloneableVO.setFirstName(resultSet.getObject("first_name", String.class));
+				entityCloneableVO.setLastName(resultSet.getObject("last_name", String.class));
+				return entityCloneableVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'entitycloneable' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+
+	public static void delete(String id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
+		}
+	}
+
+	public static void delete(String id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+
+	public static void update(EntityCloneableVO entityCloneableVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
+		try {
+			update(entityCloneableVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
+		}
+	}
+
+	public static void update(EntityCloneableVO entityCloneableVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setObject(1, entityCloneableVO.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(2, entityCloneableVO.getLastName(), Types.VARCHAR);
+		preparedStatement.setObject(3, entityCloneableVO.getId(), Types.VARCHAR);
+		logger.debug(UPDATE_STATEMENT + " [" + entityCloneableVO.getFirstName() + "][" + entityCloneableVO.getLastName() + "][" + entityCloneableVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+
+	public static List<EntityCloneableVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
+		}
+	}
+
+	public static List<EntityCloneableVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<EntityCloneableVO> entityCloneableVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getObject("id", String.class);
+				String firstName = resultSet.getObject("first_name", String.class);
+				String lastName = resultSet.getObject("last_name", String.class);
+				EntityCloneableVO entityCloneableVO = new EntityCloneableVO(id);
+				entityCloneableVO.setFirstName(firstName);
+				entityCloneableVO.setLastName(lastName);
+				entityCloneableVOs.add(entityCloneableVO);
+			}
+			return entityCloneableVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+
+}

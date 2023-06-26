@@ -3,7 +3,7 @@ package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_07.persistence.vo;
 
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_07.persistence.vof.EntityCustomTypeVOF;
 
-public class EntityCustomTypeVO extends EntityCustomTypeVOF implements Cloneable {
+public class EntityCustomTypeVO extends EntityCustomTypeVOF {
 	
 	public static final String TABLENAME = "entitycustomtype";
 	public static final String ID = "id";
@@ -34,14 +34,6 @@ public class EntityCustomTypeVO extends EntityCustomTypeVOF implements Cloneable
 			+ "id=" + this.id + "; "
 			+ "code=" + this.code
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public boolean equals(Object o) {

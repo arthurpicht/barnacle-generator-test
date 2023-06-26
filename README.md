@@ -14,6 +14,8 @@ See repo [barnacle-runtime-test](https://github.com/arthurpicht/barnacle-runtime
 * **TC_04**: auto increment fields
 * **TC_05**: unique key
 * **TC_06**: unique key composite
+* **TC_07**: custom type
+* **TC_08**: cloneable
 
 ### test group 02: 1-to-1 relationship
 

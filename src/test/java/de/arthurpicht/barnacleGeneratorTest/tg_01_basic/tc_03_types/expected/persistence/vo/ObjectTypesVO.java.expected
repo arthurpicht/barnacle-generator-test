@@ -3,7 +3,7 @@ package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.vo;
 
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_03.persistence.vof.ObjectTypesVOF;
 
-public class ObjectTypesVO extends ObjectTypesVOF implements Cloneable {
+public class ObjectTypesVO extends ObjectTypesVOF {
 	
 	public static final String TABLENAME = "object_types";
 	public static final String ID = "id";
@@ -94,14 +94,6 @@ public class ObjectTypesVO extends ObjectTypesVOF implements Cloneable {
 			+ "myByte=" + this.myByte + "; "
 			+ "myShort=" + this.myShort
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public boolean equals(Object o) {

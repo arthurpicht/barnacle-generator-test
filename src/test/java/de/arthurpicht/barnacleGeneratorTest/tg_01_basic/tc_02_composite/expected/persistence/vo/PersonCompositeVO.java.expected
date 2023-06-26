@@ -3,7 +3,7 @@ package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vo;
 
 import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_02.persistence.vof.PersonCompositeVOF;
 
-public class PersonCompositeVO extends PersonCompositeVOF implements Cloneable {
+public class PersonCompositeVO extends PersonCompositeVOF {
 	
 	public static final String TABLENAME = "person_composite";
 	public static final String FIRSTNAME = "first_name";
@@ -50,14 +50,6 @@ public class PersonCompositeVO extends PersonCompositeVOF implements Cloneable {
 			+ "lastName=" + this.lastName + "; "
 			+ "age=" + this.age
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public boolean equals(Object o) {

@@ -3,7 +3,7 @@ package de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vo;
 
 import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.vof.AddressCompositeVOF;
 
-public class AddressCompositeVO extends AddressCompositeVOF implements Cloneable {
+public class AddressCompositeVO extends AddressCompositeVOF {
 	
 	public static final String TABLENAME = "addresscomposite";
 	public static final String USERID1 = "userId1";
@@ -50,14 +50,6 @@ public class AddressCompositeVO extends AddressCompositeVOF implements Cloneable
 			+ "userId2=" + this.userId2 + "; "
 			+ "email=" + this.email
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public boolean equals(Object o) {

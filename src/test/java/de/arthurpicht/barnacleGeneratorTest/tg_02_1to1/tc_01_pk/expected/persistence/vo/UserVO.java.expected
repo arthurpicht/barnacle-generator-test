@@ -6,7 +6,7 @@ import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_01.persistence.dao.AddressD
 import java.util.List;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 
-public class UserVO extends UserVOF implements Cloneable {
+public class UserVO extends UserVOF {
 	
 	public static final String TABLENAME = "user_table";
 	public static final String ID = "id";
@@ -37,14 +37,6 @@ public class UserVO extends UserVOF implements Cloneable {
 			+ "id=" + this.id + "; "
 			+ "userName=" + this.userName
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public List<AddressVO> getAddressVOByFk_address_1() throws DataSourceException {

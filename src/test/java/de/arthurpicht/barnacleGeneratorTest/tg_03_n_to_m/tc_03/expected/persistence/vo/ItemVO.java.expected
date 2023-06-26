@@ -6,7 +6,7 @@ import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.dao.Customer
 import java.util.List;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 
-public class ItemVO extends ItemVOF implements Cloneable {
+public class ItemVO extends ItemVOF {
 	
 	public static final String TABLENAME = "item";
 	public static final String ID1 = "id1";
@@ -53,14 +53,6 @@ public class ItemVO extends ItemVOF implements Cloneable {
 			+ "id2=" + this.id2 + "; "
 			+ "description=" + this.description
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public List<CustomerItemVO> getCustomerItemVOByFk_item() throws DataSourceException {

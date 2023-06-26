@@ -3,7 +3,7 @@ package de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vo;
 
 import de.arthurpicht.barnacleGeneratorTest.tg_03.tc_03.persistence.vof.CustomerItemVOF;
 
-public class CustomerItemVO extends CustomerItemVOF implements Cloneable {
+public class CustomerItemVO extends CustomerItemVOF {
 	
 	public static final String TABLENAME = "customer_item";
 	public static final String CUSTOMERIDPART1 = "customerIdPart1";
@@ -62,14 +62,6 @@ public class CustomerItemVO extends CustomerItemVOF implements Cloneable {
 			+ "itemId1=" + this.itemId1 + "; "
 			+ "itemId2=" + this.itemId2
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public boolean equals(Object o) {

@@ -6,7 +6,7 @@ import de.arthurpicht.barnacleGeneratorTest.tg_02.tc_02.persistence.dao.AddressC
 import java.util.List;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
 
-public class UserCompositeVO extends UserCompositeVOF implements Cloneable {
+public class UserCompositeVO extends UserCompositeVOF {
 	
 	public static final String TABLENAME = "user_composite";
 	public static final String ID1 = "id1";
@@ -53,14 +53,6 @@ public class UserCompositeVO extends UserCompositeVOF implements Cloneable {
 			+ "id2=" + this.id2 + "; "
 			+ "userName=" + this.userName
 			+ "]";
-	}
-	
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError();
-		}
 	}
 	
 	public List<AddressCompositeVO> getAddressCompositeVOByFk_address_composite() throws DataSourceException {

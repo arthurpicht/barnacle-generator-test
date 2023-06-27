@@ -47,7 +47,7 @@ public class CopyExpected {
 
     public static void main(String[] args) throws IOException {
         copyAll();
-//        copy("tg_01", "tc_01");
+//        copy("tg_01", "tc_09");
     }
 
 }

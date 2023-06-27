@@ -1,0 +1,178 @@
+// DO NOT CHANGE THIS FILE MANUALLY!
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_09.persistence.dao;
+
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.ConnectionManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.Types;
+import de.arthurpicht.barnacleGeneratorTest.tg_01.tc_09.persistence.vo.EntitySerializableCloneableVO;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.DataSourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
+
+public class EntitySerializableCloneableDAO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EntitySerializableCloneableDAO.class);
+	
+	private static final String CREATE_STATEMENT = "INSERT INTO entityserializablecloneable (id, first_name, last_name) VALUES (?, ?, ?)";
+	private static final String LOAD_STATEMENT = "SELECT * FROM entityserializablecloneable WHERE id = ?";
+	private static final String DELETE_STATEMENT = "DELETE FROM entityserializablecloneable WHERE id = ?";
+	private static final String UPDATE_STATEMENT = "UPDATE entityserializablecloneable SET first_name = ?, last_name = ? WHERE id = ?";
+	private static final String FIND_ALL_STATEMENT = "SELECT * FROM entityserializablecloneable";
+	
+	public static void create(EntitySerializableCloneableVO entitySerializableCloneableVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntitySerializableCloneableDAO.class);
+		try {
+			create(entitySerializableCloneableVO, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntitySerializableCloneableDAO.class);
+		}
+	}
+	
+	public static void create(EntitySerializableCloneableVO entitySerializableCloneableVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		preparedStatement.setObject(1, entitySerializableCloneableVO.getId(), Types.VARCHAR);
+		preparedStatement.setObject(2, entitySerializableCloneableVO.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(3, entitySerializableCloneableVO.getLastName(), Types.VARCHAR);
+		logger.debug(CREATE_STATEMENT + " [" + entitySerializableCloneableVO.getId() + "][" + entitySerializableCloneableVO.getFirstName() + "][" + entitySerializableCloneableVO.getLastName() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void create(List<EntitySerializableCloneableVO> entitySerializableCloneableVOs) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntitySerializableCloneableDAO.class);
+		try {
+			create(entitySerializableCloneableVOs, connection);
+		} catch (SQLException sqlEx) {
+			throw new DataSourceException(sqlEx);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntitySerializableCloneableDAO.class);
+		}
+	}
+	
+	public static void create(List<EntitySerializableCloneableVO> entitySerializableCloneableVOs, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
+		for (EntitySerializableCloneableVO entitySerializableCloneableVO : entitySerializableCloneableVOs) {
+			preparedStatement.setObject(1, entitySerializableCloneableVO.getId(), Types.VARCHAR);
+			preparedStatement.setObject(2, entitySerializableCloneableVO.getFirstName(), Types.VARCHAR);
+			preparedStatement.setObject(3, entitySerializableCloneableVO.getLastName(), Types.VARCHAR);
+			logger.debug(CREATE_STATEMENT + " [" + entitySerializableCloneableVO.getId() + "][" + entitySerializableCloneableVO.getFirstName() + "][" + entitySerializableCloneableVO.getLastName() + "]");
+			preparedStatement.addBatch();
+		}
+		preparedStatement.executeBatch();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static EntitySerializableCloneableVO load(String id) throws DataSourceException, EntityNotFoundException {
+		Connection connection = ConnectionManager.openConnection(EntitySerializableCloneableDAO.class);
+		try {
+			return load(id, connection);
+		} catch(SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntitySerializableCloneableDAO.class);
+		}
+	}
+	
+	public static EntitySerializableCloneableVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
+		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
+		logger.debug(LOAD_STATEMENT + " [" + id + "]");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		try {
+			if (resultSet.next()) {
+				EntitySerializableCloneableVO entitySerializableCloneableVO = new EntitySerializableCloneableVO(id);
+				entitySerializableCloneableVO.setFirstName(resultSet.getObject("first_name", String.class));
+				entitySerializableCloneableVO.setLastName(resultSet.getObject("last_name", String.class));
+				return entitySerializableCloneableVO;
+			} else {
+				throw new EntityNotFoundException("Entity 'entityserializablecloneable' with primary key field 'id' = [" + id + "] not found!");
+			}
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { preparedStatement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+	public static void delete(String id) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntitySerializableCloneableDAO.class);
+		try {
+			delete(id, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntitySerializableCloneableDAO.class);
+		}
+	}
+	
+	public static void delete(String id, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
+		preparedStatement.setObject(1, id, Types.VARCHAR);
+		logger.debug(DELETE_STATEMENT + " [" + id + "]");
+		preparedStatement.execute();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static void update(EntitySerializableCloneableVO entitySerializableCloneableVO) throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntitySerializableCloneableDAO.class);
+		try {
+			update(entitySerializableCloneableVO, connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntitySerializableCloneableDAO.class);
+		}
+	}
+	
+	public static void update(EntitySerializableCloneableVO entitySerializableCloneableVO, Connection connection) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
+		preparedStatement.setObject(1, entitySerializableCloneableVO.getFirstName(), Types.VARCHAR);
+		preparedStatement.setObject(2, entitySerializableCloneableVO.getLastName(), Types.VARCHAR);
+		preparedStatement.setObject(3, entitySerializableCloneableVO.getId(), Types.VARCHAR);
+		logger.debug(UPDATE_STATEMENT + " [" + entitySerializableCloneableVO.getFirstName() + "][" + entitySerializableCloneableVO.getLastName() + "][" + entitySerializableCloneableVO.getId() + "]");
+		preparedStatement.executeUpdate();
+		try { preparedStatement.close(); } catch (SQLException ignored) {}
+	}
+	
+	public static List<EntitySerializableCloneableVO> findAll() throws DataSourceException {
+		Connection connection = ConnectionManager.openConnection(EntitySerializableCloneableDAO.class);
+		try {
+			return findAll(connection);
+		} catch (SQLException e) {
+			throw new DataSourceException(e);
+		} finally {
+			ConnectionManager.releaseConnection(connection, EntitySerializableCloneableDAO.class);
+		}
+	}
+	
+	public static List<EntitySerializableCloneableVO> findAll(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		logger.debug(FIND_ALL_STATEMENT);
+		ResultSet resultSet = statement.executeQuery(FIND_ALL_STATEMENT);
+		List<EntitySerializableCloneableVO> entitySerializableCloneableVOs = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String id = resultSet.getObject("id", String.class);
+				String firstName = resultSet.getObject("first_name", String.class);
+				String lastName = resultSet.getObject("last_name", String.class);
+				EntitySerializableCloneableVO entitySerializableCloneableVO = new EntitySerializableCloneableVO(id);
+				entitySerializableCloneableVO.setFirstName(firstName);
+				entitySerializableCloneableVO.setLastName(lastName);
+				entitySerializableCloneableVOs.add(entitySerializableCloneableVO);
+			}
+			return entitySerializableCloneableVOs;
+		} finally {
+			if (resultSet != null) { try { resultSet.close(); } catch (SQLException ignored) {}}
+			try { statement.close(); } catch (SQLException ignored) {}
+		}
+	}
+	
+}

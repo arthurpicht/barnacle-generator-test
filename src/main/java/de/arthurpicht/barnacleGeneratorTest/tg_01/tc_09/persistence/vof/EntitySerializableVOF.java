@@ -1,12 +1,14 @@
-package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_08.persistence.vof;
+package de.arthurpicht.barnacleGeneratorTest.tg_01.tc_09.persistence.vof;
 
-
+import java.io.Serializable;
 
 import static de.arthurpicht.barnacle.annotations.Annotations.*;
 
 @Barnacle
-@CloneableVo
-public class EntityCloneableVOF {
+@SerializableVo(
+        serialVersionUID = 42L
+)
+public class EntitySerializableVOF implements Serializable {
 
     @Barnacle
     @ColumnName("id")

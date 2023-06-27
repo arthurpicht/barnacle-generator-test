@@ -17,15 +17,15 @@ import org.slf4j.LoggerFactory;
 import de.arthurpicht.barnacleGeneratorTest.connectionManager.EntityNotFoundException;
 
 public class EntityCloneableDAO {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(EntityCloneableDAO.class);
-
+	
 	private static final String CREATE_STATEMENT = "INSERT INTO entitycloneable (id, first_name, last_name) VALUES (?, ?, ?)";
 	private static final String LOAD_STATEMENT = "SELECT * FROM entitycloneable WHERE id = ?";
 	private static final String DELETE_STATEMENT = "DELETE FROM entitycloneable WHERE id = ?";
 	private static final String UPDATE_STATEMENT = "UPDATE entitycloneable SET first_name = ?, last_name = ? WHERE id = ?";
 	private static final String FIND_ALL_STATEMENT = "SELECT * FROM entitycloneable";
-
+	
 	public static void create(EntityCloneableVO entityCloneableVO) throws DataSourceException {
 		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
 		try {
@@ -36,7 +36,7 @@ public class EntityCloneableDAO {
 			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
 		}
 	}
-
+	
 	public static void create(EntityCloneableVO entityCloneableVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		preparedStatement.setObject(1, entityCloneableVO.getId(), Types.VARCHAR);
@@ -46,7 +46,7 @@ public class EntityCloneableDAO {
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
 	}
-
+	
 	public static void create(List<EntityCloneableVO> entityCloneableVOs) throws DataSourceException {
 		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
 		try {
@@ -57,7 +57,7 @@ public class EntityCloneableDAO {
 			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
 		}
 	}
-
+	
 	public static void create(List<EntityCloneableVO> entityCloneableVOs, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATEMENT);
 		for (EntityCloneableVO entityCloneableVO : entityCloneableVOs) {
@@ -70,7 +70,7 @@ public class EntityCloneableDAO {
 		preparedStatement.executeBatch();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
 	}
-
+	
 	public static EntityCloneableVO load(String id) throws DataSourceException, EntityNotFoundException {
 		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
 		try {
@@ -81,7 +81,7 @@ public class EntityCloneableDAO {
 			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
 		}
 	}
-
+	
 	public static EntityCloneableVO load(String id, Connection connection) throws SQLException, EntityNotFoundException {
 		PreparedStatement preparedStatement = connection.prepareStatement(LOAD_STATEMENT);
 		preparedStatement.setObject(1, id, Types.VARCHAR);
@@ -101,7 +101,7 @@ public class EntityCloneableDAO {
 			try { preparedStatement.close(); } catch (SQLException ignored) {}
 		}
 	}
-
+	
 	public static void delete(String id) throws DataSourceException {
 		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
 		try {
@@ -112,7 +112,7 @@ public class EntityCloneableDAO {
 			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
 		}
 	}
-
+	
 	public static void delete(String id, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATEMENT);
 		preparedStatement.setObject(1, id, Types.VARCHAR);
@@ -120,7 +120,7 @@ public class EntityCloneableDAO {
 		preparedStatement.execute();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
 	}
-
+	
 	public static void update(EntityCloneableVO entityCloneableVO) throws DataSourceException {
 		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
 		try {
@@ -131,7 +131,7 @@ public class EntityCloneableDAO {
 			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
 		}
 	}
-
+	
 	public static void update(EntityCloneableVO entityCloneableVO, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATEMENT);
 		preparedStatement.setObject(1, entityCloneableVO.getFirstName(), Types.VARCHAR);
@@ -141,7 +141,7 @@ public class EntityCloneableDAO {
 		preparedStatement.executeUpdate();
 		try { preparedStatement.close(); } catch (SQLException ignored) {}
 	}
-
+	
 	public static List<EntityCloneableVO> findAll() throws DataSourceException {
 		Connection connection = ConnectionManager.openConnection(EntityCloneableDAO.class);
 		try {
@@ -152,7 +152,7 @@ public class EntityCloneableDAO {
 			ConnectionManager.releaseConnection(connection, EntityCloneableDAO.class);
 		}
 	}
-
+	
 	public static List<EntityCloneableVO> findAll(Connection connection) throws SQLException {
 		Statement statement = connection.createStatement();
 		logger.debug(FIND_ALL_STATEMENT);
@@ -174,5 +174,5 @@ public class EntityCloneableDAO {
 			try { statement.close(); } catch (SQLException ignored) {}
 		}
 	}
-
+	
 }
